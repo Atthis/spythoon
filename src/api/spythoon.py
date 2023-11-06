@@ -1,31 +1,87 @@
 # Definir l'interface pour l'utilisateur
+from typing import Callable, Any
+import j2l.pytactx.agent as pytactx
 
-class IPlayer:
-    def update():
+
+class IPainter:
+    def getCoordinates(self) -> tuple[int, int]:
+        """
+        Return the actual coordinates x and y
+        """
         ...
 
-    def move():
+    def getDirection(self) -> int:
+        """
+        Return actual direction as integer from 0 to 3
+        0: Est
+        1: South
+        2: West
+        3: North
+        """
         ...
 
-    def rotate():
+    def getTeam(self) -> int:
+        """
+        Return team number
+        """
         ...
 
-    def paint():
+    def isPainting(self) -> bool:
+        """
+        Return True if painting is active, False if painting is inactive
+        """
+
+    def update(self) -> None:
+        """
+        Fetch the last values of player data from server
+        And send buffered requests in one shot to limit bandwidth.
+        To be call in the main loop at least every 10 msecs.
+        """
         ...
 
-    def scanNearestTiles():
+    def move(self) -> None:
+        """
+        Request a relative move on the grid in front of the previous agent position
+        The request will be send the next update() call
+        """
         ...
 
-    def detectNearPlayers():
+    def rotate(self, dir:int) -> None:
+        """
+        Request a rotation of the agent on the grid.
+        Dir should be integers values from 0 (east) to 3 (south).
+        The request will be send the next update() call
+        """
         ...
 
-    def listenBonusSpawn():
+    def paint(self, active:bool):
+        """
+        Request an activation (active:True) or a deactivation (active:False) of the paint trail.
+        The request will be send the next update() call
+        """
         ...
 
-    def moveToBonus():
+    def scanNearestTiles(self) -> dict[str,Any]:
+        """
+        Request infos on nearest tiles status : neutral, ally painted or enemy painted
+        Return a dictionnary of tiles with their status
+        """
         ...
 
-class Player:
-    def __init__(self) -> None:
-        self.hasBonus = False
-        
+    def scanNearestPlayers(self) -> dict[str,Any]:
+        """
+        Request a list of nearby players with their team info and position.
+        Return a dictionnary of all nearby players
+        """
+        ...
+
+    # def moveToBonus(self, x:int, y:int) -> None:
+        # """
+        # Request a one step move towards the specified x,y absolute direction on the grid.
+        # The request will be send the next update() call
+        # """
+        # ...
+
+class PytactxPainter(IPainter):
+    def __init__(self, playerId:str or None=None, arena:str or None=None, username:str or None=None, password:str or None=None, server:str or None=None, port:int=1883) -> None:
+        self.__pytactxAgent = pytactx.Agent(playerId, arena, username, password, server, port)
