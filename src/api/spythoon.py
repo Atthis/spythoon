@@ -1,5 +1,6 @@
 # Definir l'interface pour l'utilisateur
 from typing import Callable, Any
+
 import j2l.pytactx.agent as pytactx
 
 
@@ -61,16 +62,16 @@ class IPainter:
         """
         ...
 
-    def scanNearestTiles(self) -> dict[str,Any]:
+    def scanNearbyTiles(self) -> dict[str,Any]:
         """
         Request infos on nearest tiles status : neutral, ally painted or enemy painted
         Return a dictionnary of tiles with their status
         """
         ...
 
-    def scanNearestPlayers(self) -> dict[str,Any]:
+    def scanNearbyPlayers(self) -> dict[str,Any]:
         """
-        Request a list of nearby players with their team info and position.
+        Request a list of nearby players with their team number and position.
         Return a dictionnary of all nearby players
         """
         ...
