@@ -1,0 +1,53 @@
+@startuml splythoon
+actor User
+participant agent.py as ovaApi
+participant Broker
+box "Serveur" #LightGoldenRodYellow
+    participant onMessage as Server
+    participant onUpdated as Message
+    participant JoueurModel as Joueur
+end box
+box "Table de jeu - Plateau" #LightSalmon
+    participant ArenaViewer
+end box
+
+== Boucle principale==
+Message -> Message: update()
+Message -> Broker: Envoi des MAJ de jeu
+Broker -> ArenaViewer: Envoi des MAJ de jeu
+Broker -> ovaApi: Envoi des MAJ de jeu
+
+==Event driven MQTT ==
+User -> ovaApi: pytactx.Agent()
+ovaApi -> Broker: Demande de connexion au serveur
+Broker -> Broker: Controle identifiant/mdp
+Broker -> Server: Demande de connexion au serveur
+Server -> Server: Controle si partie pleine\nControle le nom du joueur\nControle l'équipe du joueur
+Server -> Joueur: Création du joueur
+activate Joueur
+Server -> Server: Controle si tout les joueurs présents
+Server -> Server: Lancement de la partie
+Server -> Server: Lancement du compte à rebours
+
+== ==
+User -> ovaApi: agent.move(X, Y)
+ovaApi -> Broker: requete de déplacement 
+Broker -> Server: requete de déplacement
+Server -> Server: 1-contrôle si case destination existante \n2-contrôle si case destination adjacente \n3-contrôle si case destination occupée
+Server -> Server: contrôle si spray activé
+Server -> Server: Validation du déplacement \nSi spray activé, changer l'état de la case
+
+== ==
+User -> ovaApi: agent.fire(True)
+ovaApi -> Broker: requete d'activation du spray
+Broker -> Server: requete d'activation du spray
+Server -> Server: reduction de la vitesse du joueur
+Server -> Server: Activation du spray du joueur
+
+==Fin de partie==
+Server -> Server: si décompte terminé\nenvoi fin de partie
+Server -> Joueur: suppression du joueur
+deactivate Joueur
+
+
+@enduml

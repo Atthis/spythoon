@@ -1,0 +1,1 @@
+Detail de l'API
