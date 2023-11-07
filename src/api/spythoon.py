@@ -31,6 +31,7 @@ class IPainter:
         """
         Return True if painting is active, False if painting is inactive
         """
+        ...
 
     def update(self) -> None:
         """
@@ -83,6 +84,45 @@ class IPainter:
         # """
         # ...
 
+
 class PytactxPainter(IPainter):
     def __init__(self, playerId:str or None=None, arena:str or None=None, username:str or None=None, password:str or None=None, server:str or None=None, port:int=1883) -> None:
         self.__pytactxAgent = pytactx.Agent(playerId, arena, username, password, server, port)
+
+    def getCoordinates(self) -> tuple[int, int]:
+        return (self.__pytactxAgent.x, self.__pytactxAgent.y)
+
+    def getDirection(self) -> int:
+        return self.__pytactxAgent.dir
+
+    def getTeam(self) -> int:
+        return self.__pytactxAgent.team
+
+    def isPainting(self) -> bool:
+        return self.__pytactxAgent.isFiring
+
+    def update(self) -> None:
+        self.__pytactxAgent.update()
+    
+    def move(self) -> None:
+        match (self.__pytactxAgent.dir):
+            case 0:
+                self.__pytactxAgent.move(1, 0)
+            case 1:
+                self.__pytactxAgent.move(0, 1)
+            case 2:
+                self.__pytactxAgent.move(-1, 0)
+            case 3:
+                self.__pytactxAgent.move(0, -1)
+
+    def rotate(self, dir:int) -> None:
+        self.__pytactxAgent.lookAt(dir)
+
+    def paint(self, active:bool):
+        self.__pytactxAgent.fire(active)
+
+    def scanNearbyTiles(self) -> dict[str,Any]:
+        return self.__pytactxAgent.map
+
+    def scanNearbyPlayers(self) -> dict[str,Any]:
+        return self.__pytactxAgent.range

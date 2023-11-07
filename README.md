@@ -1,5 +1,7 @@
 # SPYTHOON
 
+## Le Splatoon® en Python
+
 ## Description
 
 Spythoon est un jeu développé en Python, s'appuyant sur la librairie [PytactX par Jus de Lien](https://jusdeliens.com/). Il s'inspire du jeu vidéo Splatoon®.
