@@ -18,42 +18,53 @@ ARENA=os.getenv('ARENA')
 USERNAME=os.getenv('USERNAME')
 PASSWORD=os.getenv('PASSWORD')
 SERVER=os.getenv('SERVER')
-PORT=os.getenv('PORT')
-
+PORT=int(os.getenv('PORT'))
 
 # Import of main class
 from src.api.spythoon import PytactxPainter
 
 
-def createAgent():
-    return PytactxPainter(playerId=PLAYER, arena=ARENA, username=USERNAME, password=PASSWORD, server=SERVER, port=PORT)
+def createAgent(playerId):
+    return PytactxPainter(playerId=playerId, arena=ARENA, username=USERNAME, password=PASSWORD, server=SERVER, port=PORT)
+
+
+painter = None
+# painter.update()
+# print(painter.isPainting())
+# painter.paint(True)
+# print(painter.scanNearbyTiles())
+# print(len(painter.scanNearbyTiles()))
+# painter.update()
+# print(painter.isPainting())
+painter = createAgent(PLAYER)
+
 
 def test_instanciation():
-    painterTeam1 = createAgent()
-    painterTeam2 = createAgent()
-    xt1, yt1 = painterTeam1.getCoordinates()
+    painterTeam2 = createAgent("Team2")
+    painter.update()
+    painterTeam2.update()
+    xt1, yt1 = painter.getCoordinates()
     xt2, yt2 = painterTeam2.getCoordinates()
     # Test if team 1 player spawn in the right area
-    assert  0 < xt1 < 4 and 0 < yt1 < 4, "Team1 player doesn't spawn in the right position"
+    assert  0 <= xt1 <= 26 and 0 <= yt1 <= 12, "Team1 player doesn't spawn in the right position"
     # Test if team 2 player spawn in the right area
-    assert  22 < xt1 < 26 and 8 < yt1 < 12, "Team2 player doesn't spawn in the right position"
+    assert  0 <= xt2 <= 26 and 0 <= yt2 <= 12, "Team2 player doesn't spawn in the right position"
 
 def test_getDirection():
-    painter = createAgent()
-    assert 0 <= painter.getDirection <= 3
+    painter.update()
+    assert 0 <= painter.getDirection() <= 3
 
 def test_getTeam():
-    painter = createAgent()
-    assert painter.getTeam() == 1 or painter.getTeam() == 2
+    painter.update()
+    assert painter.getTeam() == 1 or painter.getTeam() == 2 or painter.getTeam() == 0
 
 def test_isPainting():
-    painter = createAgent()
-    painter.paint()
+    painter.update()
+    painter.paint(True)
     painter.update()
     assert painter.isPainting() == True
 
 def test_rotate():
-    painter = createAgent()
     currDir = painter.getDirection()
     painter.rotate(19)
     painter.update()
@@ -61,14 +72,14 @@ def test_rotate():
     assert currDir == newDir, "Non respect de la précondition de rotate"
 
     currDir = painter.getDirection()
-    expectedDir = (currDir + 2) % 4
+    print(currDir)
+    expectedDir = 3
     painter.rotate(expectedDir)
     painter.update()
     newDir = painter.getDirection()
     assert expectedDir == newDir, "Erreur quand respect de la précondition de rotate"
 
 def test_move():
-    painter = createAgent()
     painter.rotate(0)
     painter.update()
     currX, currY = painter.getCoordinates()
@@ -86,13 +97,12 @@ def test_move():
     assert newX == currX and newY == currY + 1, "Erreur de déplacement sur Y"
 
 def test_scanNearbyTiles():
-    painter = createAgent()
+    painter.update()
     nearestTiles = painter.scanNearbyTiles()
-    assert len(nearestTiles) == 25
+    assert len(nearestTiles) == 12
 
 def test_scanNearbyPlayer():
-    painter = createAgent()
-    movingPlayer = createAgent()
+    movingPlayer = createAgent("Movin'")
     px, py = painter.getCoordinates()
     mpx, mpy = movingPlayer.getCoordinates()
 

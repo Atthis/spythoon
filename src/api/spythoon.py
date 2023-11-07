@@ -1,6 +1,6 @@
 # Definir l'interface pour l'utilisateur
 from typing import Callable, Any
-
+import time
 import j2l.pytactx.agent as pytactx
 
 
@@ -89,7 +89,13 @@ class PytactxPainter(IPainter):
     def __init__(self, playerId:str or None=None, arena:str or None=None, username:str or None=None, password:str or None=None, server:str or None=None, port:int=1883) -> None:
         self.__pytactxAgent = pytactx.Agent(playerId, arena, username, password, server, port)
 
+        while len(self.__pytactxAgent.map) == 0:
+            self.__pytactxAgent.lookAt((self.__pytactxAgent.dir+1) %4)
+            self.__pytactxAgent.update()
+
     def getCoordinates(self) -> tuple[int, int]:
+        # self.__pytactxAgent.update()
+        # print(self.__pytactxAgent.x)
         return (self.__pytactxAgent.x, self.__pytactxAgent.y)
 
     def getDirection(self) -> int:
@@ -102,6 +108,7 @@ class PytactxPainter(IPainter):
         return self.__pytactxAgent.isFiring
 
     def update(self) -> None:
+        time.sleep(0.3)
         self.__pytactxAgent.update()
     
     def move(self) -> None:
