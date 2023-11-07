@@ -4,7 +4,7 @@
 
 ## Description
 
-Spythoon est un jeu développé en Python, s'appuyant sur la librairie [PytactX par Jus de Lien](https://jusdeliens.com/). Il s'inspire du jeu vidéo Splatoon®.
+Spythoon est un jeu développé en Python, s'appuyant sur la librairie [PytactX par Jusdeliens](https://jusdeliens.com/). Il s'inspire du jeu vidéo Splatoon®.
 
 Une équipe de 3 robots se défient sur une arène, dans l'objectif de recouvrir la plus grande surface de cette arène de la couleur de son équipe dans le temps imparti.
 
