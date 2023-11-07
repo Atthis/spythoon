@@ -4,10 +4,10 @@
 # with the same dir to allow intellisense
 import os
 import sys
-__testsDir__ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-__libdir__ = os.path.dirname(__testsDir__)
+__fileDir__ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+__libdir__ = os.path.dirname(__fileDir__)
 sys.path.append(__libdir__)
-__srcDir__ = os.path.join(__libdir__ , 'src', 'api')
+__srcDir__ = os.path.join(__libdir__ , 'src', 'server')
 sys.path.append(__srcDir__)
 
 from dotenv import load_dotenv
@@ -46,9 +46,9 @@ def test_instanciation():
     xt1, yt1 = painter.getCoordinates()
     xt2, yt2 = painterTeam2.getCoordinates()
     # Test if team 1 player spawn in the right area
-    assert  0 <= xt1 <= 26 and 0 <= yt1 <= 12, "Team1 player doesn't spawn in the right position"
+    assert  0 <= xt1 < 26 and 0 <= yt1 < 12, "Team1 player doesn't spawn in the right position"
     # Test if team 2 player spawn in the right area
-    assert  0 <= xt2 <= 26 and 0 <= yt2 <= 12, "Team2 player doesn't spawn in the right position"
+    assert  0 <= xt2 < 26 and 0 <= yt2 < 12, "Team2 player doesn't spawn in the right position"
 
 def test_getDirection():
     painter.update()

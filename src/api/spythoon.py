@@ -89,7 +89,7 @@ class PytactxPainter(IPainter):
     def __init__(self, playerId:str or None=None, arena:str or None=None, username:str or None=None, password:str or None=None, server:str or None=None, port:int=1883) -> None:
         self.__pytactxAgent = pytactx.Agent(playerId, arena, username, password, server, port)
 
-        while len(self.__pytactxAgent.map) == 0:
+        while len(self.__pytactxAgent.game) == 0:
             self.__pytactxAgent.lookAt((self.__pytactxAgent.dir+1) %4)
             self.__pytactxAgent.update()
 

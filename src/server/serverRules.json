@@ -1,0 +1,52 @@
+{
+  "arenaRules": {
+    "gridColumns": 26,
+    "gridRows": 12,
+    "bgColor": [0, 0, 0, 1],
+    "mapFriction": [0.0, 0.0, 0.0, 1.0],
+    "mapImgs": ["", "d1", "d2", ""],
+    "range": [3, 10, 10, 0, 0],
+    "dtMove": [300, 300, 450, 10, 10],
+    "dtFire": [300, 300, 450, 10, 10],
+    "hitFire": [0, 15, 10, 100, 0],
+    "infiniteAmmo": [true, false, false, true, false],
+    "teamColor": [
+      [190, 0, 160],
+      [0, 125, 153]
+    ],
+    "teamName": ["🍉 Fuschia", "🫐 Turquoise", "Grey"],
+    "spawnArena": { "x": [3, 23, 13], "y": [3, 9, 6] }
+  },
+  "playerRules": {
+    "🍉 joueur1": {
+      "led": [190, 0, 160],
+      "team": 0,
+      "dir": 0
+    },
+    "🍉 joueur3": {
+      "led": [190, 0, 160],
+      "team": 0,
+      "dir": 0
+    },
+    "🍉 joueur5": {
+      "led": [190, 0, 160],
+      "team": 0,
+      "dir": 0
+    },
+    "🫐 joueur2": {
+      "led": [0, 125, 153],
+      "team": 1,
+      "dir": 2
+    },
+    "🫐 joueur3": {
+      "led": [0, 125, 153],
+      "team": 1,
+      "dir": 2
+    },
+    "🫐 joueur6": {
+      "led": [0, 125, 153],
+      "team": 1,
+      "dir": 2
+    }
+  }
+}
