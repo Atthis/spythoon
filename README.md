@@ -6,7 +6,7 @@ Spythoon est un jeu développé en Python, s'appuyant sur la librairie [PytactX 
 
 Une équipe de 3 robots se défient sur une arène, dans l'objectif de recouvrir la plus grande surface de cette arène de la couleur de son équipe dans le temps imparti.
 
-![maquette du jeu](./docs/maquette.png)
+![maquette du jeu](docs/maquette.png)
 
 ## Objectif du jeu
 
