@@ -1,5 +1,13 @@
 # SPYTHOON
 
+## Description
+
+Spythoon est un jeu développé en Python, s'appuyant sur la librairie [PytactX par Jus de Lien](https://jusdeliens.com/). Il s'inspire du jeu vidéo Splatoon®.
+
+Une équipe de 3 robots se défient sur une arène, dans l'objectif de recouvrir la plus grande surface de cette arène de la couleur de son équipe dans le temps imparti.
+
+![maquette du jeu](/docs/maquette.png)
+
 ## Objectif du jeu
 
 Recouvrir le plus de cases possibles de la couleur d'équipe en un temps donné.
