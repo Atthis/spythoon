@@ -10,6 +10,8 @@ sys.path.append(__libdir__)
 __srcDir__ = os.path.join(__libdir__ , 'src', 'api')
 sys.path.append(__srcDir__)
 
+import random
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -25,4 +27,18 @@ from src.api.spythoon import PytactxPainter
 
 def createAgent(playerId):
     return PytactxPainter(playerId=playerId, arena=ARENA, username=USERNAME, password=PASSWORD, server=SERVER, port=PORT)
+
+agent = createAgent("🍉 joueur1")
+
+while True:
+    agent.move()
+    agent.rotate((agent.getDirection() +1) % 4)
+    willFire = random.randint(1, 10)
+
+    if willFire < 5:
+        agent.paint(True)
+    else:
+        agent.paint(False)
+
+    agent.update()
 

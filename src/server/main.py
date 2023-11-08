@@ -114,9 +114,10 @@ while True:
 
     # Par joueur, si Fire, coloration de la case a la position du joueur
     for player in currRange.values():
-        if player["fire"] and bool(player["ammo"]):
+        if player["fire"]:
+            print("youhou")
             match player["team"]:
-                case "1":
+                case 1:
                     globalMap[player["y"]][player["x"]] = 1
 
                     # calcul de la nouvelle possession et du score de chaque équipe
@@ -124,8 +125,8 @@ while True:
 
                     referee.ruleArena("info", f"Scores - team 1 : {team1Score} / team 2 : {team2Score}.")
 
-                    print(team1Possession, team1Score)
-                case "2":
+                    # print(team1Possession, team1Score)
+                case 2:
                     globalMap[player["y"]][player["x"]] = 2
 
             player["ammo"] = player["ammo"] - 1
@@ -148,7 +149,7 @@ while True:
     #     referee.ruleArena("info", "Partie terminée !")
     #     referee.ruleArena("pause", True)
 
-    print(secondsToMinutesSeconds(partyTimer - deltaTime))
+    # print(secondsToMinutesSeconds(partyTimer - deltaTime))
 
     referee.update()
 
