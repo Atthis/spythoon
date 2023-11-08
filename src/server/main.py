@@ -37,11 +37,16 @@ referee.rulePlayer(referee.clientId, "team", 0)
 referee.ruleArena("info", "⌛ Initialisation de l'arbitre...")
 
 # Reset de l'arene
+referee.ruleArena("open", True)
 referee.ruleArena("reset", True)
 referee.update()
 time.sleep(1)
 
 # 1 - Definition des regles de l'arene : on boucle dans le dico de regles pour appliquer les regles
+
+# "mapImgs": ["", "rgba(255,55,223, 1)", "rgba(0, 125, 153, 1)", ""],
+
+
 for arenaRule, arenaAttribute in serverRulesdict["arenaRules"].items():
     referee.ruleArena(arenaRule, arenaAttribute)
 
@@ -63,26 +68,40 @@ referee.ruleArena("open", False)
 referee.update()
 time.sleep(0.3)
 
-# Reset du timer en secondes  recuperation du timestamp actuel transcrit en secondes
-partyTimer = 300
-startTimestamp = referee.game["t"]
 
 # Retrieve map status
 globalMap = copy.deepcopy(referee.game["map"])
 
+time.sleep(5)
+globalMap[0][0] = 1
+globalMap[1][0] = 1
+globalMap[2][0] = 1
+referee.ruleArena("map", globalMap)
+referee.update()
+time.sleep(5)
+
 # Set starting scores
+team2Possession = 0
+team1Possession = 0
 team1Score = 0
 team2Score = 0
 
 # Launch party msg
 referee.ruleArena("info", "🟢 C'est parti !")
+time.sleep(1)
 
+referee.ruleArena("info", f"| Team 1 : {team1Score} / Team 2 : {team2Score}.")
 
 referee.update()
 time.sleep(0.3)
 
+# Reset du timer en secondes  recuperation du timestamp actuel transcrit en secondes
+partyTimer = 300
+startTimestamp = referee.game["t"]
+
 print(referee.range)
 
+i = 0
 # Main loop for referee update 
 while True:
     # referee direction changes to apply updates
@@ -95,26 +114,27 @@ while True:
 
     # Par joueur, si Fire, coloration de la case a la position du joueur
     for player in currRange.values():
-        print(player)
-        if player["fire"] and player["ammo"] != 0:
+        if player["fire"] and bool(player["ammo"]):
             match player["team"]:
                 case "1":
                     globalMap[player["y"]][player["x"]] = 1
+
+                    # calcul de la nouvelle possession et du score de chaque équipe
+                    team1Score, team2Score = updatePossession(globalMap, referee.game["gridColumns"], referee.game["gridRows"])
+
+                    referee.ruleArena("info", f"Scores - team 1 : {team1Score} / team 2 : {team2Score}.")
+
+                    print(team1Possession, team1Score)
                 case "2":
                     globalMap[player["y"]][player["x"]] = 2
+
             player["ammo"] = player["ammo"] - 1
 
     # Envoi du nouvel etat de la carte
     referee.ruleArena("map", globalMap)
 
-    # Calculer le score de chaque équipe
-    for row in globalMap :
-        for tileValue in row:
-            match tileValue:
-                case 1:
-                    team1Score += 1
-                case 2:
-                    team2Score += 1
+    # Envoyer les scores si changement de score d'une des équipes
+    
     
 
 
@@ -123,7 +143,6 @@ while True:
     currTimestamp = referee.game["t"]
     #   - recuperer le delta de temps entre les 2 boucles 
     deltaTime = (currTimestamp - startTimestamp) // 1000
-    print(deltaTime)
 
     # if deltaTime >= partyTimer:
     #     referee.ruleArena("info", "Partie terminée !")
@@ -132,6 +151,8 @@ while True:
     print(secondsToMinutesSeconds(partyTimer - deltaTime))
 
     referee.update()
+
+    i = i +1
 
 
 

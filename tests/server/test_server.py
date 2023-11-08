@@ -25,3 +25,4 @@ from src.api.spythoon import PytactxPainter
 
 def createAgent(playerId):
     return PytactxPainter(playerId=playerId, arena=ARENA, username=USERNAME, password=PASSWORD, server=SERVER, port=PORT)
+
