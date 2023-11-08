@@ -33,15 +33,17 @@ def test_calcRelScore():
    assert calcRelScore(26, 12, 2) == 3.2
 
 def updatePossession(Map:dict[Any], mapX, mapY) -> tuple[float, float]:
+    team1Possession = 0
+    team1Score = 0
+    team2Possession = 0
+    team2Score = 0
     for row in Map :
         for tileValue in row:
-            print(tileValue)
             match tileValue:
                 case 1:
                     team1Possession, team1Score = updateScore(team1Possession, team1Score, mapX, mapY)
                 case 2:
-                    team2Possession += 1
-                    team2Score = calcRelScore(mapX, mapY, team2Possession)
+                    team2Possession, team2Score = updateScore(team2Possession, team2Score, mapX, mapY)
     return (team1Score, team2Score)
 
    

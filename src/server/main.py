@@ -99,9 +99,6 @@ time.sleep(0.3)
 partyTimer = 300
 startTimestamp = referee.game["t"]
 
-print(referee.range)
-
-i = 0
 # Main loop for referee update 
 while True:
     # referee direction changes to apply updates
@@ -115,20 +112,22 @@ while True:
     # Par joueur, si Fire, coloration de la case a la position du joueur
     for player in currRange.values():
         if player["fire"]:
-            print("youhou")
-            match player["team"]:
-                case 1:
-                    globalMap[player["y"]][player["x"]] = 1
+            globalMap[player["y"]][player["x"]] = player["team"]
+            # calcul de la nouvelle possession et du score de chaque équipe
+            team1Score, team2Score = updatePossession(globalMap, referee.game["gridColumns"], referee.game["gridRows"])
+            # match player["team"]:
+            #     case 1:
+            #         globalMap[player["y"]][player["x"]] = 1
 
-                    # calcul de la nouvelle possession et du score de chaque équipe
-                    team1Score, team2Score = updatePossession(globalMap, referee.game["gridColumns"], referee.game["gridRows"])
+            #         # calcul de la nouvelle possession et du score de chaque équipe
+            #         team1Score, team2Score = updatePossession(globalMap, referee.game["gridColumns"], referee.game["gridRows"])
 
-                    referee.ruleArena("info", f"Scores - team 1 : {team1Score} / team 2 : {team2Score}.")
 
-                    # print(team1Possession, team1Score)
-                case 2:
-                    globalMap[player["y"]][player["x"]] = 2
+            #     case 2:
+            #         globalMap[player["y"]][player["x"]] = 2
 
+            referee.ruleArena("info", f"Scores - team 1 : {team1Score} / team 2 : {team2Score}.")
+            # print(team1Possession, team1Score)
             player["ammo"] = player["ammo"] - 1
 
     # Envoi du nouvel etat de la carte
@@ -152,8 +151,6 @@ while True:
     # print(secondsToMinutesSeconds(partyTimer - deltaTime))
 
     referee.update()
-
-    i = i +1
 
 
 

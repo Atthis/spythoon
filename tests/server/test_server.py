@@ -28,17 +28,24 @@ from src.api.spythoon import PytactxPainter
 def createAgent(playerId):
     return PytactxPainter(playerId=playerId, arena=ARENA, username=USERNAME, password=PASSWORD, server=SERVER, port=PORT)
 
-agent = createAgent("🍉 joueur1")
+agent1 = createAgent("🍉 joueur1")
+agent2 = createAgent("🍉 joueur3")
+agent3 = createAgent("🫐 joueur2")
+agent4 = createAgent("🫐 joueur4")
+
+
+agents = [agent1, agent2, agent3, agent4]
 
 while True:
-    agent.move()
-    agent.rotate((agent.getDirection() +1) % 4)
-    willFire = random.randint(1, 10)
+    for agent in agents:
+        agent.move()
+        agent.rotate((agent.getDirection() +1) % 4)
+        willFire = random.randint(1, 10)
 
-    if willFire < 5:
-        agent.paint(True)
-    else:
-        agent.paint(False)
+        if willFire < 5:
+            agent.paint(True)
+        else:
+            agent.paint(False)
 
-    agent.update()
+        agent.update()
 
