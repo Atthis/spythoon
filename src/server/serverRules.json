@@ -5,47 +5,62 @@
     "bgColor": [0, 0, 0, 1],
     "mapFriction": [0.0, 0.0, 0.0, 1.0],
     "mapImgs": ["", "d1", "d2", ""],
+    "ammoIni": [110, 110, 110, 0, 0],
     "range": [3, 10, 10, 0, 0],
     "dtMove": [300, 300, 450, 10, 10],
     "dtFire": [300, 300, 450, 10, 10],
     "hitFire": [0, 15, 10, 100, 0],
-    "infiniteAmmo": [true, false, false, true, false],
+    "infiniteAmmo": [false, false, false, true, false],
     "teamColor": [
+      [80, 80, 80],
       [190, 0, 160],
       [0, 125, 153]
     ],
-    "teamName": ["🍉 Fuschia", "🫐 Turquoise", "Grey"],
-    "spawnArena": { "x": [3, 23, 13], "y": [3, 9, 6] }
+    "teamNb": 3,
+    "teamName": ["🍉 Fuschia", "🫐 Turquoise", "Referee"],
+    "spawnArena": { "x": [3, 23, 13], "y": [3, 9, 6], "r": [3, 3, 10] }
   },
-  "playerRules": {
+  "playersRules": {
     "🍉 joueur1": {
-      "led": [190, 0, 160],
+      "color": [190, 0, 160],
       "team": 0,
+      "x": 1,
+      "y": 3,
       "dir": 0
     },
     "🍉 joueur3": {
-      "led": [190, 0, 160],
+      "color": [190, 0, 160],
       "team": 0,
+      "x": 2,
+      "y": 2,
       "dir": 0
     },
     "🍉 joueur5": {
-      "led": [190, 0, 160],
+      "color": [190, 0, 160],
       "team": 0,
+      "x": 3,
+      "y": 1,
       "dir": 0
     },
     "🫐 joueur2": {
-      "led": [0, 125, 153],
+      "color": [0, 125, 153],
       "team": 1,
+      "x": 24,
+      "y": 8,
       "dir": 2
     },
-    "🫐 joueur3": {
-      "led": [0, 125, 153],
+    "🫐 joueur4": {
+      "color": [0, 125, 153],
       "team": 1,
+      "x": 23,
+      "y": 9,
       "dir": 2
     },
     "🫐 joueur6": {
-      "led": [0, 125, 153],
+      "color": [0, 125, 153],
       "team": 1,
+      "x": 22,
+      "y": 10,
       "dir": 2
     }
   }
