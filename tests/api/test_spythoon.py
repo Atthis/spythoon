@@ -7,7 +7,7 @@ import sys
 __fileDir__ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 __libdir__ = os.path.dirname(__fileDir__)
 sys.path.append(__libdir__)
-__srcDir__ = os.path.join(__libdir__ , 'src', 'server')
+__srcDir__ = os.path.join(__libdir__ , 'src', 'api')
 sys.path.append(__srcDir__)
 
 from dotenv import load_dotenv
@@ -22,7 +22,6 @@ PORT=int(os.getenv('PORT'))
 
 # Import of main class
 from src.api.spythoon import PytactxPainter
-
 
 def createAgent(playerId):
     return PytactxPainter(playerId=playerId, arena=ARENA, username=USERNAME, password=PASSWORD, server=SERVER, port=PORT)
