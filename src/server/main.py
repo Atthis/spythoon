@@ -113,30 +113,18 @@ while True:
     for player in currRange.values():
         if player["fire"]:
             globalMap[player["y"]][player["x"]] = player["team"]
+
             # calcul de la nouvelle possession et du score de chaque équipe
             team1Score, team2Score = updatePossession(globalMap, referee.game["gridColumns"], referee.game["gridRows"])
-            # match player["team"]:
-            #     case 1:
-            #         globalMap[player["y"]][player["x"]] = 1
 
-            #         # calcul de la nouvelle possession et du score de chaque équipe
-            #         team1Score, team2Score = updatePossession(globalMap, referee.game["gridColumns"], referee.game["gridRows"])
-
-
-            #     case 2:
-            #         globalMap[player["y"]][player["x"]] = 2
-
+            # Affichage du score dans la GUI
             referee.ruleArena("info", f"Scores - team 1 : {team1Score} / team 2 : {team2Score}.")
-            # print(team1Possession, team1Score)
-            player["ammo"] = player["ammo"] - 1
+
+            # Reduction des ammo du joueur
+            referee.rulePlayer(player["playerId"], "ammo", player["ammo"] -1)
 
     # Envoi du nouvel etat de la carte
     referee.ruleArena("map", globalMap)
-
-    # Envoyer les scores si changement de score d'une des équipes
-    
-    
-
 
     # Mise a jour du timer de la carte
     #   - recuperation tn
@@ -150,6 +138,7 @@ while True:
 
     # print(secondsToMinutesSeconds(partyTimer - deltaTime))
 
+    # Envoi deas requetes et reception des MAJ du serveur
     referee.update()
 
 
