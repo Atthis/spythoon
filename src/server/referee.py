@@ -117,7 +117,7 @@ class Referee(IReferee):
     def __init__(self, playerId:str or None=None, arena:str or None=None, username:str or None=None, password:str or None=None, server:str or None=None, port:int=1883) -> None:
         self.__pytactxAgent = pytactx.Agent(playerId, arena, username, password, server, port)
 
-        self.__timeMaster = timeMaster.TimerMaster()
+        self.__timeMaster = timerMaster.TimerMaster()
 
         self.__pytactxAgent.team = 0
         self.__pytactxAgent.profile = 2
