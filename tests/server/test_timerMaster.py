@@ -10,8 +10,6 @@ sys.path.append(__libdir__)
 __srcDir__ = os.path.join(__libdir__ , 'src', 'server')
 sys.path.append(__srcDir__)
 
-import random
-
 from src.server.timerMaster import TimerMaster
 
 def createMaster():
