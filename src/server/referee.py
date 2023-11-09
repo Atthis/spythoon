@@ -1,6 +1,6 @@
-from typing import Callable, Any
+from typing import Any
 import time
-from utils import *
+# from utils import *
 
 import j2l.pytactx.agent as pytactx
 import timerMaster, scoreDealer
@@ -106,9 +106,9 @@ class Referee(IReferee):
         self.__pytactxAgent.profile = 2
         self.__map = self.__pytactxAgent.game["map"]
 
-        while len(self.__pytactxAgent.game) == 0:
-            self.__pytactxAgent.lookAt((self.__pytactxAgent.dir+1) %4)
-            self.__pytactxAgent.update()
+        # while len(self.__pytactxAgent.game) == 0:
+        #     self.__pytactxAgent.lookAt((self.__pytactxAgent.dir+1) %4)
+        #     self.__pytactxAgent.update()
     
     def update(self) -> None:
         time.sleep(0.3)
@@ -169,12 +169,12 @@ class Referee(IReferee):
     def getPartyTimer(self) -> int:
         return self.__timeMaster.partyTimer
 
-    def setPartyTimer(self, timer:int) -> None:
-        self.__timeMaster.partyTimer = timer
+    def setPartyTimer(self, timer:int) -> Any:
+        return self.__timeMaster.setPartyTimer(timer)
 
     def updatePartyTimer(self, startTimestamp: int, currTimestamp: int) -> int:
         deltaTime = (currTimestamp - startTimestamp) // 1000
-        self.__timeMaster.setPartyTimer(self.partyTimer - deltaTime)
+        self.__timeMaster.setPartyTimer(self.__timeMaster.getPartyTimer() - deltaTime)
         return self.__timeMaster.partyTimer
 
     def getCurrTimestamp(self) -> int:

@@ -1,5 +1,4 @@
 from typing import Any
-from utils import *
 
 class ITimerMaster:
     def setPartyTimer(self, timer:int) -> None:
@@ -27,8 +26,11 @@ class TimerMaster(ITimerMaster):
     def getPartyTimer(self) -> int:
         return self.partyTimer
 
-    def setPartyTimer(self, timer:int) -> None:
+    def setPartyTimer(self, timer:int) -> Any:
+        if timer < 0:
+            return "Merci de fournir un entier positif"
         self.partyTimer = timer
+        return self.partyTimer
 
     def updatePartyTimer(self, startTimestamp: int, currTimestamp: int) -> int:
         deltaTime = (currTimestamp - startTimestamp) // 1000
