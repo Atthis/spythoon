@@ -21,36 +21,44 @@ def test_timeStampToTimer() -> None:
    time2 = 4225
    assert secondsToMinutesSeconds(time2) == "70:25"
 
-def calcRelScore(mapX, mapY, teamScore) -> float:
-   return truncate((teamScore / (mapX * mapY) * 500), 1)
+def calcRelScore(map, teamScore) -> float:
+    mapSurface = len(map) * len(map[0])
+    return truncate((teamScore / mapSurface * 500), 1)
 
 def test_calcRelScore():
-   assert calcRelScore(26, 12, 2) == 3.2
+   map = [
+        [0, 0, 0],
+        [0, 0, 0]
+    ]
+   assert calcRelScore(map, 2) == 166.6
 
-def updateScore(teamPossession, teamScore, mapX, mapY) -> tuple[int, int]:
-   teamPossession = teamPossession + 1
-   teamScore = calcRelScore(mapX, mapY, teamPossession)
-   return (teamPossession, teamScore)
-
-def updatePossession(Map:dict[Any], mapX, mapY) -> tuple[float, float]:
-    team1Possession = 0
+def updateScore(map: [[int]]) -> tuple[float, float]:
     team1Score = 0
-    team2Possession = 0
     team2Score = 0
-    for row in Map :
+    team1Possession, team2Possession = updatePossession(map)
+    team1Score = calcRelScore(map, team1Possession)
+    team2Score = calcRelScore(map, team2Possession)
+    return (team1Score, team2Score)
+
+def updatePossession(map:[[int]]) -> tuple[int, int]:
+    team1Possession = 0
+    team2Possession = 0
+    for row in map :
         for tileValue in row:
             match tileValue:
                 case 1:
-                    team1Possession, team1Score = updateScore(team1Possession, team1Score, mapX, mapY)
+                    # team1Possession, team1Score = updateScore(team1Possession, team1Score, map)
+                    team1Possession += 1
                 case 2:
-                    team2Possession, team2Score = updateScore(team2Possession, team2Score, mapX, mapY)
-    return (team1Score, team2Score)
+                    # team2Possession, team2Score = updateScore(team2Possession, team2Score, map)
+                    team2Possession += 1
+    return (team1Possession, team2Possession)
 
-# def test_updatePossession():
-#     map = [
-#         [1, 1, 1],
-#         [2, 2, 2]
-#     ]
-#     mapSurface = len(map) * len(map[0])
+def test_updateScore():
+    map = [
+        [1, 1, 1],
+        [2, 2, 2]
+    ]
+    assert updateScore(map) == (250, 250)
 
     

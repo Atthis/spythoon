@@ -67,10 +67,9 @@ time.sleep(0.3)
 time.sleep(5)
 globalMap = copy.deepcopy(referee.game["map"])
 
+print(type(globalMap))
 
-# Set starting possessions and scores
-team2Possession = 0
-team1Possession = 0
+# Set starting scores
 team1Score = 0
 team2Score = 0
 
@@ -101,6 +100,7 @@ while True:
     # For each player, apply changes if fire
     for player in currRange.values():
         # If player fire, apply profile which slow its movments
+        ## SETPROFILEONFIRE()
         if player["fire"]:
             referee.rulePlayer(player, "profile", 1)
         else:
@@ -108,15 +108,19 @@ while True:
 
         # If player fire and got ammo, change tile status and calc new score
         if player["fire"] and player["ammo"]:
+            ## UPDATEARENAMAP
             globalMap[player["y"]][player["x"]] = player["team"]
 
             # calcul de la nouvelle possession et du score de chaque équipe
-            team1Score, team2Score = updatePossession(globalMap, referee.game["gridColumns"], referee.game["gridRows"])
+            ## UPDATESCORES
+            team1Score, team2Score = updateScore(globalMap)
 
             # Affichage du score dans la GUI
+            ## PRINTINFOTOARENA
             referee.ruleArena("info", f"Scores - team 1 : {team1Score} / team 2 : {team2Score}.")
 
             # Reduction des ammo du joueur
+            ## DECREASEPLAYERAMMO
             referee.rulePlayer(player["playerId"], "ammo", player["ammo"] -1)
 
     # Envoi du nouvel etat de la carte
@@ -128,13 +132,13 @@ while True:
     #   - recuperer le delta de temps entre les 2 boucles 
     deltaTime = (currTimestamp - startTimestamp) // 1000
 
-    # if deltaTime >= partyTimer:
+    # if referee.isGameOver() :
     #     referee.ruleArena("info", "Partie terminée !")
     #     referee.ruleArena("pause", True)
 
     print(secondsToMinutesSeconds(partyTimer - deltaTime))
 
-    # Envoi deas requetes et reception des MAJ du serveur
+    # Envoi des requetes et reception des MAJ du serveur
     referee.update()
 
 

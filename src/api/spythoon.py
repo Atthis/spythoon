@@ -1,4 +1,4 @@
-# Definir l'interface pour l'utilisateur
+# Player interface
 from typing import Callable, Any
 import time
 import j2l.pytactx.agent as pytactx
