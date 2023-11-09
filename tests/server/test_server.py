@@ -30,11 +30,13 @@ def createAgent(playerId):
 
 agent1 = createAgent("🍉 joueur1")
 agent2 = createAgent("🍉 joueur3")
-agent3 = createAgent("🫐 joueur2")
-agent4 = createAgent("🫐 joueur4")
+agent3 = createAgent("🍉 joueur5")
+agent4 = createAgent("🫐 joueur2")
+agent5 = createAgent("🫐 joueur4")
+agent6 = createAgent("🫐 joueur6")
 
 
-agents = [agent1, agent2, agent3, agent4]
+agents = [agent1, agent2, agent3, agent4, agent5, agent6]
 
 
 ### A TESTER
@@ -47,15 +49,17 @@ agents = [agent1, agent2, agent3, agent4]
 # - 
 
 while True:
+
     for agent in agents:
         agent.move()
-        agent.rotate((agent.getDirection() +1) % 4)
-        willFire = random.randint(1, 10)
+        # agent.rotate((agent.getDirection() +1) % 4)
+        # willFire = random.randint(1, 10)
 
-        if willFire < 7:
-            agent.paint(True)
-        else:
-            agent.paint(False)
+        agent.paint(True)
+        # if willFire < 7:
+            # agent.paint(True)
+        # else:
+            # agent.paint(False)
 
         agent.update()
 

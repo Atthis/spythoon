@@ -1,18 +1,26 @@
-# Referee interface
-from typing import Callable, Any
+from typing import Any
 import time
-import j2l.pytactx.agent as pytactx
-from utils import *
+# from utils import *
 
+import j2l.pytactx.agent as pytactx
+import timerMaster, scoreDealer
+
+# Referee interface
 class IReferee:
-    
-    def update(slef) -> None:
+    def update(self) -> None:
         """
         Fetch the last values of referee data from server
         And send buffered requests in one shot to limit bandwidth.
         To be call in the main loop at least every 10 msecs. 
         """
+        ...
     
+    def getDir(self) -> int:
+        """
+        return referee direction
+        """
+        ...
+
     def rotate(self, dir:int) -> None:
         """
         Request a rotation of the agent on the grid.
@@ -21,9 +29,9 @@ class IReferee:
         """
         ...
 
-    def setRefereeTeam(self, team:int) -> None:
+    def getGameInfos(self) -> dict[str, Any]:
         """
-        Set the team the referee belong to, so it is not in one of the players' team
+        Request game infos
         """
         ...
 
@@ -33,7 +41,7 @@ class IReferee:
         """
         ...
 
-    def setPlayers(self, rulesFile:dict[str, Any]) -> None:
+    def createPlayers(self, rulesFile:dict[str, Any]) -> None:
         """
         Create all arena players based on the rules file
         """
@@ -45,7 +53,7 @@ class IReferee:
         """
         ...
 
-    def closeArena(self, close:bool) -> None:
+    def openArena(self, open:bool) -> None:
         """
         Close arena so no other player can join
         """
@@ -57,19 +65,13 @@ class IReferee:
         """
         ...
 
-    def resetTeamScores(self) -> tuple[int, int]:
+    def getRefereeMap(self) -> [[int]]:
         """
-        Set the teams score to 0
-        """
-        ...
-
-    def setRefereeMap(self) -> [[int]]:
-        """
-        retrieve arena map at the begining of the game, so referee can update a copy locally
+        return referee map value
         """
         ...
 
-    def updateRefereeMap(self, map:[[int]], x: int, y: int) -> [[int]]:
+    def updateRefereeMap(self, x: int, y: int, value:int) -> None:
         """
         update the referee map
         """
@@ -87,20 +89,9 @@ class IReferee:
         """
         ...
 
-    def setPlayerProfileOnFire(self, playerIsFiring:bool) -> None:
+    def setPlayerProfileOnFire(self, player:dict[str, Any]) -> None:
         """
         set the player profile depending on if it is firing or not
-        """
-        ...
-
-    def updatePossessions(self, map:[[int]]) -> tuple[int, int]:
-        """
-        Calculate the number of tiles each team own, and return the values
-        """
-
-    def updateScores(self, map:[[int]]) -> tuple[float, float]:
-        """
-        Calcul teams scores depending on map tiles status, and return new scores
         """
         ...
 
@@ -109,21 +100,10 @@ class IReferee:
         Update player ammo on each shoot
         """
         ...
-
-    def setPartyTimer(self, timer:int) -> None:
-        """
-        Set the party duration, in seconds
-        """
-        ...
-
+    
     def getCurrTimestamp(self) -> int:
         """
         Retrieve current timestamp from the server
-        """
-
-    def updatePartyTimer(self, startTimestamp: int) -> int:
-        """
-        Update the party timer based on the startTimestamp and the currTimestamp
         """
         ...
 
@@ -137,128 +117,93 @@ class Referee(IReferee):
     def __init__(self, playerId:str or None=None, arena:str or None=None, username:str or None=None, password:str or None=None, server:str or None=None, port:int=1883) -> None:
         self.__pytactxAgent = pytactx.Agent(playerId, arena, username, password, server, port)
 
+        self.__timeMaster = timerMaster.TimerMaster()
+        self.__scoreDealer = scoreDealer.ScoreDealer()
+
+        self.__pytactxAgent.team = 0
+        self.__pytactxAgent.profile = 2
+        self.__map = self.__pytactxAgent.game["map"]
+
         while len(self.__pytactxAgent.game) == 0:
             self.__pytactxAgent.lookAt((self.__pytactxAgent.dir+1) %4)
             self.__pytactxAgent.update()
     
-    # Here all rules defines by referee
+    def update(self) -> None:
+        time.sleep(0.3)
+        self.__pytactxAgent.update()
+    
+    def getDir(self) -> int:
+        return self.__pytactxAgent.dir
 
-    def setPlayerProfileOnFire(self, player:dict[str, Any]):
-        """
-        if player["fire"]:
-            profile 1
-        else:
-            profile 2
-        """
+    def rotate(self, dir:int) -> None:
+        self.__pytactxAgent.lookAt(dir)
 
-    def setRefereeTeam(self, team:int) -> None:
-        """
-        Set the team the referee belong to, so it is not in one of the players' team
-        """
-        ...
+    def getGameInfos(self) -> dict[str, Any]:
+        return self.__pytactxAgent.game
 
     def setArenaRules(self, rulesFile:dict[str, Any]) -> None:
-        """
-        Define all the rules of the arena based on a file
-        """
-        ...
+        self.printInfoToArena("⌛ Définition des règles de la carte ...")
+        for arenaRule, arenaAttribute in rulesFile["arenaRules"].items():
+            self.__pytactxAgent.ruleArena(arenaRule, arenaAttribute)
 
-    def setPlayers(self, rulesFile:dict[str, Any]) -> None:
-        """
-        Create all arena players based on the rules file
-        """
-        ...
+    def createPlayers(self, rulesFile:dict[str, Any]) -> None:
+        self.printInfoToArena("⌛ Création des joueurs ...")
+        for player, playerAttributes in rulesFile["playersRules"].items():
+            for attributeKey, attributeValue in playerAttributes.items():
+                self.__pytactxAgent.rulePlayer(player, attributeKey, attributeValue)
 
     def printInfoToArena(self, info:str) -> None:
-        """
-        Print the input string to the arena info area
-        """
-        ...
+        self.__pytactxAgent.ruleArena("info", info)
 
-    def closeArena(self, close:bool) -> None:
-        """
-        Close arena so no other player can join
-        """
-        ...
+    def openArena(self, open:bool) -> None:
+        self.__pytactxAgent.ruleArena("open", open)
 
     def resetArena(self) -> None:
-        """
-        Reset the entire arena
-        """
-        ...
+        self.__pytactxAgent.ruleArena("reset", True)
 
     def resetTeamScores(self) -> tuple[int, int]:
-        """
-        Set the teams score to 0
-        """
-        ...
+        return self.__scoreDealer.resetTeamScores()
 
-    def setRefereeMap(self) -> [[int]]:
-        """
-        retrieve arena map at the begining of the game, so referee can update a copy locally
-        """
-        ...
+    def getRefereeMap(self) -> [[int]]:
+        return self.__map
 
-    def updateRefereeMap(self, map:[[int]], x: int, y: int) -> [[int]]:
-        """
-        update the referee map
-        """
-        ...
+    def updateRefereeMap(self, x: int, y: int, value:int) -> None:
+        self.__map[y][x] = value
 
-    def updateArenaMap(self, map:[[int]]) -> None:
-        """
-        Update the arena map with the referee copy
-        """
-        ...
+    def updateArenaMap(self) -> None:
+        self.__pytactxAgent.ruleArena("map", self.__map)
 
     def getCurrentRange(self) -> dict[str, Any]:
-        """
-        retrieve the current range of the referee from the server
-        """
-        ...
+        return self.__pytactxAgent.range
 
-    def setPlayerProfileOnFire(self, playerIsFiring:bool) -> None:
-        """
-        set the player profile depending on if it is firing or not
-        """
-        ...
+    def setPlayerProfileOnFire(self, player:dict[str, Any]) -> None:
+        if player["fire"]:
+            self.__pytactxAgent.rulePlayer(player["clientId"], "profile", 1)
+        else:
+            self.__pytactxAgent.rulePlayer(player["clientId"], "profile", 0)
 
-    def updatePossessions(self, map:[[int]]) -> tuple[int, int]:
-        """
-        Calculate the number of tiles each team own, and return the values
-        """
+    def _updatePossessions(self, map:[[int]]) -> tuple[int, int]:
+        return self.__scoreDealer._updatePossessions(map)
 
     def updateScores(self, map:[[int]]) -> tuple[float, float]:
-        """
-        Calcul teams scores depending on map tiles status, and return new scores
-        """
-        ...
+        return self.__scoreDealer.updateScores(map)
 
     def decreasePlayerAmmo(self, player:dict[str, Any]) -> None:
-        """
-        Update player ammo on each shoot
-        """
-        ...
+        self.__pytactxAgent.rulePlayer(player["clientId"], "ammo", player["ammo"] - 1)
 
-    def setPartyTimer(self, timer:int) -> None:
-        """
-        Set the party duration, in seconds
-        """
-        ...
+    def getPartyTimer(self) -> int:
+        return self.__timeMaster.partyTimer
 
-    def getCurrTimestamp(self) -> int:
-        """
-        Retrieve current timestamp from the server
-        """
+    def setPartyTimer(self, timer:int) -> Any:
+        return self.__timeMaster.setPartyTimer(timer)
 
     def updatePartyTimer(self, startTimestamp: int) -> int:
-        """
-        Update the party timer based on the startTimestamp and the currTimestamp
-        """
-        ...
+        return self.__timeMaster.updatePartyTimer(startTimestamp, self.getCurrTimestamp())
+
+    def getCurrTimestamp(self) -> int:
+        return self.__pytactxAgent.game["t"]
 
     def isGameOver(self) -> bool:
-        """
-        Return true if game is over, depending on specific conditions
-        """
-        ...
+        if self.getPartyTimer() <= 0:
+            return True
+        return False
