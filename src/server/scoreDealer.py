@@ -28,7 +28,10 @@ class ScoreDealer(IScoreDealer):
     def resetTeamScores(self) -> tuple[int, int]:
         return (0, 0)
 
-    def updatePossessions(self, map:[[int]]) -> tuple[int, int]:
+    def _updatePossessions(self, map:[[int]]) -> tuple[int, int] or str:
+        if not map:
+            print("!! ERREUR la map est vide !")
+            return ""
         team1Possession = 0
         team2Possession = 0
         for row in map :
@@ -41,9 +44,12 @@ class ScoreDealer(IScoreDealer):
         return (team1Possession, team2Possession)
     
     def updateScores(self, map:[[int]]) -> tuple[float, float]:
+        if not map:
+            print("!! ERREUR la map est vide !")
+            return ""
         team1Score = 0
         team2Score = 0
-        team1Possession, team2Possession = updatePossession(map)
+        team1Possession, team2Possession = self._updatePossessions(map)
         team1Score = calcRelScore(map, team1Possession)
         team2Score = calcRelScore(map, team2Possession)
         return (team1Score, team2Score)

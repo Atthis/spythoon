@@ -34,5 +34,5 @@ class TimerMaster(ITimerMaster):
 
     def updatePartyTimer(self, startTimestamp: int, currTimestamp: int) -> int:
         deltaTime = (currTimestamp - startTimestamp) // 1000
-        self.setPartyTimer(self.partyTimer - deltaTime)
-        return self.partyTimer
+        remainingTime = self.partyTimer - deltaTime
+        return remainingTime

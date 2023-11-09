@@ -15,11 +15,23 @@ class IReferee:
         """
         ...
     
+    def getDir(self) -> int:
+        """
+        return referee direction
+        """
+        ...
+
     def rotate(self, dir:int) -> None:
         """
         Request a rotation of the agent on the grid.
         Dir should be integers values from 0 (east) to 3 (south).
         The request will be send the next update() call
+        """
+        ...
+
+    def getGameInfos(self) -> dict[str, Any]:
+        """
+        Request game infos
         """
         ...
 
@@ -41,7 +53,7 @@ class IReferee:
         """
         ...
 
-    def closeArena(self, close:bool) -> None:
+    def openArena(self, open:bool) -> None:
         """
         Close arena so no other player can join
         """
@@ -53,7 +65,13 @@ class IReferee:
         """
         ...
 
-    def updateRefereeMap(self, x: int, y: int, value:int) -> [[int]]:
+    def getRefereeMap(self) -> [[int]]:
+        """
+        return referee map value
+        """
+        ...
+
+    def updateRefereeMap(self, x: int, y: int, value:int) -> None:
         """
         update the referee map
         """
@@ -106,16 +124,22 @@ class Referee(IReferee):
         self.__pytactxAgent.profile = 2
         self.__map = self.__pytactxAgent.game["map"]
 
-        # while len(self.__pytactxAgent.game) == 0:
-        #     self.__pytactxAgent.lookAt((self.__pytactxAgent.dir+1) %4)
-        #     self.__pytactxAgent.update()
+        while len(self.__pytactxAgent.game) == 0:
+            self.__pytactxAgent.lookAt((self.__pytactxAgent.dir+1) %4)
+            self.__pytactxAgent.update()
     
     def update(self) -> None:
         time.sleep(0.3)
         self.__pytactxAgent.update()
     
+    def getDir(self) -> int:
+        return self.__pytactxAgent.dir
+
     def rotate(self, dir:int) -> None:
         self.__pytactxAgent.lookAt(dir)
+
+    def getGameInfos(self) -> dict[str, Any]:
+        return self.__pytactxAgent.game
 
     def setArenaRules(self, rulesFile:dict[str, Any]) -> None:
         self.printInfoToArena("⌛ Définition des règles de la carte ...")
@@ -131,8 +155,8 @@ class Referee(IReferee):
     def printInfoToArena(self, info:str) -> None:
         self.__pytactxAgent.ruleArena("info", info)
 
-    def closeArena(self, close:bool) -> None:
-        self.__pytactxAgent.ruleArena("open", close)
+    def openArena(self, open:bool) -> None:
+        self.__pytactxAgent.ruleArena("open", open)
 
     def resetArena(self) -> None:
         self.__pytactxAgent.ruleArena("reset", True)
@@ -140,9 +164,11 @@ class Referee(IReferee):
     def resetTeamScores(self) -> tuple[int, int]:
         return self.__scoreDealer.resetTeamScores()
 
-    def updateRefereeMap(self, x: int, y: int, value:int) -> [[int]]:
-        self.__map[y][x] = value
+    def getRefereeMap(self) -> [[int]]:
         return self.__map
+
+    def updateRefereeMap(self, x: int, y: int, value:int) -> None:
+        self.__map[y][x] = value
 
     def updateArenaMap(self) -> None:
         self.__pytactxAgent.ruleArena("map", self.__map)
@@ -156,9 +182,8 @@ class Referee(IReferee):
         else:
             self.__pytactxAgent.rulePlayer(player["clientId"], "profile", 0)
 
-
-    def updatePossessions(self, map:[[int]]) -> tuple[int, int]:
-        return self.__scoreDealer.updatePossessions(map)
+    def _updatePossessions(self, map:[[int]]) -> tuple[int, int]:
+        return self.__scoreDealer._updatePossessions(map)
 
     def updateScores(self, map:[[int]]) -> tuple[float, float]:
         return self.__scoreDealer.updateScores(map)
@@ -172,10 +197,8 @@ class Referee(IReferee):
     def setPartyTimer(self, timer:int) -> Any:
         return self.__timeMaster.setPartyTimer(timer)
 
-    def updatePartyTimer(self, startTimestamp: int, currTimestamp: int) -> int:
-        deltaTime = (currTimestamp - startTimestamp) // 1000
-        self.__timeMaster.setPartyTimer(self.__timeMaster.getPartyTimer() - deltaTime)
-        return self.__timeMaster.partyTimer
+    def updatePartyTimer(self, startTimestamp: int) -> int:
+        return self.__timeMaster.updatePartyTimer(startTimestamp, self.getCurrTimestamp())
 
     def getCurrTimestamp(self) -> int:
         return self.__pytactxAgent.game["t"]

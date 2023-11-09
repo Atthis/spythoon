@@ -45,39 +45,23 @@ referee.resetArena()
 referee.printInfoToArena("")
 
 ## TESTS REFEREE CLASS FUNCTIONS
-print("---rotate---")
-referee.rotate(1) # 1
-referee.update()
-print(referee.getDir())
-time.sleep(1)
-referee.rotate(3) #3
-referee.update()
-print(referee.getDir())
-time.sleep(1)
-referee.rotate(2) # 2
-referee.update()
-print(referee.getDir())
-time.sleep(1)
-referee.rotate(0) # 0
-referee.update()
-print(referee.getDir())
-time.sleep(1)
-
-print("---SetArenaRules---")
+print("==========================")
+time.sleep(5)
+print("---SetArenaRules & createPlayers---")
 print(referee.getGameInfos())
-referee.setArenaRules(serverRulesdict)
-referee.update()
-time.sleep(8)
-print("------")
-print(referee.getGameInfos())
-
-print("---createPlayers---")
+print("--------------------------")
 print(referee.getCurrentRange())
+referee.setArenaRules(serverRulesdict)
 referee.createPlayers(serverRulesdict)
 referee.update()
-time.sleep(8)
-print("------")
-print(referee.getCurrentRange())
+
+print("---rotate---")
+i = 0
+while i < 5:
+    referee.rotate(i%4)
+    print(referee.getDir())
+    i += 1
+    referee.update()
 
 print("---PrintInfoToArena---")
 referee.printInfoToArena("Ici CAEN !!!")
@@ -102,9 +86,16 @@ print("---getPartyTimer---")
 print(referee.getPartyTimer()) # 20
 
 print("---updatePartyTimer---")
-referee.updatePartyTimer(10000, 15000)
+referee.updatePartyTimer(10)
 print(referee.getPartyTimer()) # 15
 
 ## TESTS TIMEDEALER INSTANCE FUNCTIONS
 print("---resetTeamScore---")
 print(referee.resetTeamScores()) # (0, 0)
+
+print("==========================")
+time.sleep(10)
+print(referee.getGameInfos())
+print("--------------------------")
+print(referee.getCurrentRange())
+time.sleep(10)

@@ -12,7 +12,7 @@
     "pImgs": ["ova.svg", "ova.svg", "ova.svg", "ball.svg"],
     "range": [3, 3, 3, 0],
     "dtDir": [300, 300, 300, 10],
-    "dtMove": [300, 500, 300, 10],
+    "dtMove": [300, 450, 300, 10],
     "weapon": [0, 0, 0, 1],
     "fxFire": [false, false, false, false],
     "hitCollision": [10, 10, 10, 0],
@@ -30,7 +30,7 @@
       [0, 125, 153]
     ],
     "teamNb": 3,
-    "teamName": ["Referee", "🍉 Fuschia", "🫐 Turquoise"],
+    "teamName": ["referee", "🍉 Fuschia", "🫐 Turquoise"],
     "spawnArena": { "x": [13, 3, 23], "y": [6, 3, 9], "r": [10, 3, 3] }
   },
   "playersRules": {
