@@ -112,15 +112,16 @@ class PytactxPainter(IPainter):
         self.__pytactxAgent.update()
     
     def move(self) -> None:
+        print(self.__pytactxAgent.dir)
         match (self.__pytactxAgent.dir):
             case 0:
                 self.__pytactxAgent.move(1, 0)
             case 1:
-                self.__pytactxAgent.move(0, 1)
+                self.__pytactxAgent.move(0, -1)
             case 2:
                 self.__pytactxAgent.move(-1, 0)
             case 3:
-                self.__pytactxAgent.move(0, -1)
+                self.__pytactxAgent.move(0, 1)
 
     def rotate(self, dir:int) -> None:
         self.__pytactxAgent.lookAt(dir)

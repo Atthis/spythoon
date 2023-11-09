@@ -48,6 +48,16 @@ agents = [agent1, agent2, agent3, agent4, agent5, agent6]
 # - 
 # - 
 
+for agent in agents:
+    agent.paint(False)
+    
+agent1.rotate(3)
+agent3.rotate(0)
+agent5.rotate(0)
+agent2.rotate(1)
+agent4.rotate(2)
+agent6.rotate(2)
+
 while True:
 
     for agent in agents:

@@ -65,6 +65,11 @@ class IReferee:
         """
         ...
 
+    def resetMap(self) -> None:
+        """
+        Reset status of all map tiles
+        """
+
     def getRefereeMap(self) -> [[int]]:
         """
         return referee map value
@@ -160,6 +165,13 @@ class Referee(IReferee):
 
     def resetArena(self) -> None:
         self.__pytactxAgent.ruleArena("reset", True)
+
+#######################
+    # def resetMap(self) -> None:
+    #     for row  in self.map:
+    #         for index, tile in enumerate(row):
+    #             tile = 0
+#######################      
 
     def resetTeamScores(self) -> tuple[int, int]:
         return self.__scoreDealer.resetTeamScores()

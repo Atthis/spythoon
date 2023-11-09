@@ -92,54 +92,13 @@ while True:
 
         if player["fire"] and player["ammo"]:
             referee.updateRefereeMap(player["x"], player["y"], player["team"])
-            referee.updateScores(referee.getRefereeMap())
+            team1Score, team2Score = referee.updateScores(referee.getRefereeMap())
             referee.printInfoToArena(f"Scores - team 1 : {team1Score} / team 2 : {team2Score}.")
             referee.decreasePlayerAmmo(player)
             referee.updateArenaMap()
     
     remainingTime = secondsToMinutesSeconds(referee.updatePartyTimer(startTimestamp))
     referee.printInfoToArena(f"| ⏰ {remainingTime} | 👑 🍉 Fuschia : {team1Score} / 🫐 Turquoise : {team2Score}.")
-    
-    # For each player, apply changes if fire
-    # for player in currRange.values():
-    #     # If player fire, apply profile which slow its movments
-    #     ## SETPROFILEONFIRE()
-    #     if player["fire"]:
-    #         referee.rulePlayer(player["clientId"], "profile", 1)
-    #     else:
-    #         referee.rulePlayer(player["clientId"], "profile", 0)
-
-    #     # If player fire and got ammo, change tile status and calc new score
-    #     if player["fire"] and player["ammo"]:
-    #         ## UPDATEARENAMAP
-    #         globalMap[player["y"]][player["x"]] = player["team"]
-
-    #         # calcul de la nouvelle possession et du score de chaque équipe
-    #         ## UPDATESCORES
-    #         # team1Score, team2Score = updateScore(globalMap)
-
-    #         # Affichage du score dans la GUI
-    #         ## PRINTINFOTOARENA
-    #         referee.ruleArena("info", f"Scores - team 1 : {team1Score} / team 2 : {team2Score}.")
-
-    #         # Reduction des ammo du joueur
-    #         ## DECREASEPLAYERAMMO
-    #         referee.rulePlayer(player["playerId"], "ammo", player["ammo"] -1)
-
-    # # Envoi du nouvel etat de la carte
-    # referee.ruleArena("map", globalMap)
-
-    # # Mise a jour du timer de la carte
-    # #   - recuperation tn
-    # currTimestamp = referee.game["t"]
-    # #   - recuperer le delta de temps entre les 2 boucles 
-    # deltaTime = (currTimestamp - startTimestamp) // 1000
-
-    # # if referee.isGameOver() :
-    # #     referee.ruleArena("info", "Partie terminée !")
-    # #     referee.ruleArena("pause", True)
-
-    # print(secondsToMinutesSeconds(partyTimer - deltaTime))
 
     # Envoi des requetes et reception des MAJ du serveur
     referee.update()
