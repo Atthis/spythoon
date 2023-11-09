@@ -97,6 +97,7 @@ while True:
     currRange = copy.deepcopy(referee.range)
 
     # For each player, apply changes if fire
+    ## for player in referee.getCurrentRange().values()
     for player in currRange.values():
         # If player fire, apply profile which slow its movments
         ## SETPROFILEONFIRE()
