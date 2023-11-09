@@ -33,6 +33,7 @@ except Exception as e:
 referee = pytactx.Agent(ARBITRE, ARENA, USERNAME, PASSWORD, SERVER, PORT)
 # Put referee in his own team
 referee.rulePlayer(referee.clientId, "team", 0)
+# referee.rulePlayer(referee.clientId, "profile", 2)
 
 referee.ruleArena("info", "⌛ Initialisation de l'arbitre...")
 
@@ -67,8 +68,6 @@ time.sleep(0.3)
 time.sleep(5)
 globalMap = copy.deepcopy(referee.game["map"])
 
-print(type(globalMap))
-
 # Set starting scores
 team1Score = 0
 team2Score = 0
@@ -102,9 +101,9 @@ while True:
         # If player fire, apply profile which slow its movments
         ## SETPROFILEONFIRE()
         if player["fire"]:
-            referee.rulePlayer(player, "profile", 1)
+            referee.rulePlayer(player["clientId"], "profile", 1)
         else:
-            referee.rulePlayer(player, "profile", 0)
+            referee.rulePlayer(player["clientId"], "profile", 0)
 
         # If player fire and got ammo, change tile status and calc new score
         if player["fire"] and player["ammo"]:
