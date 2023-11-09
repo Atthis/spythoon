@@ -1,7 +1,6 @@
 # import of standard libraries
 import time
 import os
-import sys
 import json
 import copy
 
@@ -21,8 +20,8 @@ PORT=int(os.getenv('PORT'))
 # Import pytactX class and utils
 import j2l.pytactx.agent as pytactx
 from utils import *
-# Import rules json file
 
+# Import json rules file
 # Try catch to retrieve rules data
 try:
     with open(os.path.join(__fileDir__, 'serverRules.json')) as json_data:
@@ -32,55 +31,44 @@ except Exception as e:
 
 # Referee creation
 referee = pytactx.Agent(ARBITRE, ARENA, USERNAME, PASSWORD, SERVER, PORT)
+# Put referee in his own team
 referee.rulePlayer(referee.clientId, "team", 0)
 
 referee.ruleArena("info", "⌛ Initialisation de l'arbitre...")
 
-# Reset de l'arene
-referee.ruleArena("open", True)
+# Reset arena
+# referee.ruleArena("open", True)
 referee.ruleArena("reset", True)
 referee.update()
 time.sleep(1)
 
-# 1 - Definition des regles de l'arene : on boucle dans le dico de regles pour appliquer les regles
-
-# "mapImgs": ["", "rgba(255,55,223, 1)", "rgba(0, 125, 153, 1)", ""],
-
-
+# Define arena rules from the json
 for arenaRule, arenaAttribute in serverRulesdict["arenaRules"].items():
     referee.ruleArena(arenaRule, arenaAttribute)
-
 referee.ruleArena("info", "⌛ Définition des règles de la carte ...")
 referee.update()
-time.sleep(2)
+time.sleep(1)
 
-# 2 - Creation des joueurs a partir du dico de regles
+# Create players and their rules from the json
 for player, playerAttributes in serverRulesdict["playersRules"].items():
     for attributeKey, attributeValue in playerAttributes.items():
         referee.rulePlayer(player, attributeKey, attributeValue)
-
 referee.ruleArena("info", "⌛ Création des joueurs ...")
-referee.update()
-time.sleep(2)
-
-# 3 - Fermeture de l'arene : referee.ruleArena("open", False)
-referee.ruleArena("open", False)
 referee.update()
 time.sleep(0.3)
 
+# Close arena to new player
+# referee.ruleArena("open", False)
+# referee.update()
+# time.sleep(0.3)
+
 
 # Retrieve map status
+time.sleep(5)
 globalMap = copy.deepcopy(referee.game["map"])
 
-time.sleep(5)
-globalMap[0][0] = 1
-globalMap[1][0] = 1
-globalMap[2][0] = 1
-referee.ruleArena("map", globalMap)
-referee.update()
-time.sleep(5)
 
-# Set starting scores
+# Set starting possessions and scores
 team2Possession = 0
 team1Possession = 0
 team1Score = 0
@@ -88,30 +76,38 @@ team2Score = 0
 
 # Launch party msg
 referee.ruleArena("info", "🟢 C'est parti !")
-time.sleep(1)
+referee.update()
+time.sleep(2)
 
-referee.ruleArena("info", f"| Team 1 : {team1Score} / Team 2 : {team2Score}.")
-
+#
+referee.ruleArena("info", f"| 👑 🍉 Fuschia : {team1Score} / 🫐 Turquoise : {team2Score}.")
 referee.update()
 time.sleep(0.3)
 
-# Reset du timer en secondes  recuperation du timestamp actuel transcrit en secondes
+
+# Reset party timer and retrieve current timestamp
 partyTimer = 300
 startTimestamp = referee.game["t"]
 
+print('----- AVANT boucle -----')
 # Main loop for referee update 
 while True:
     # referee direction changes to apply updates
     referee.lookAt((referee.dir+1)%4)
 
-    # stocke les infos de la map et des joueurs dans une variable deepcopy
+    # stocke les infos des joueurs dans une variable deepcopy
     currRange = copy.deepcopy(referee.range)
 
-    # infos des joueurs : position, nFire
-
-    # Par joueur, si Fire, coloration de la case a la position du joueur
+    # For each player, apply changes if fire
     for player in currRange.values():
+        # If player fire, apply profile which slow its movments
         if player["fire"]:
+            referee.rulePlayer(player, "profile", 1)
+        else:
+            referee.rulePlayer(player, "profile", 0)
+
+        # If player fire and got ammo, change tile status and calc new score
+        if player["fire"] and player["ammo"]:
             globalMap[player["y"]][player["x"]] = player["team"]
 
             # calcul de la nouvelle possession et du score de chaque équipe
@@ -136,7 +132,7 @@ while True:
     #     referee.ruleArena("info", "Partie terminée !")
     #     referee.ruleArena("pause", True)
 
-    # print(secondsToMinutesSeconds(partyTimer - deltaTime))
+    print(secondsToMinutesSeconds(partyTimer - deltaTime))
 
     # Envoi deas requetes et reception des MAJ du serveur
     referee.update()

@@ -36,13 +36,23 @@ agent4 = createAgent("🫐 joueur4")
 
 agents = [agent1, agent2, agent3, agent4]
 
+
+### A TESTER
+# - changement statut case quand joueur fire
+# - changement profil joueur quand fire
+# - arrêt peinture cases quand joueur ne tire pas
+# - cumul des points quand cases se peignent
+# - arrêt de partie si temps imparti écoulé
+# - 
+# - 
+
 while True:
     for agent in agents:
         agent.move()
         agent.rotate((agent.getDirection() +1) % 4)
         willFire = random.randint(1, 10)
 
-        if willFire < 5:
+        if willFire < 7:
             agent.paint(True)
         else:
             agent.paint(False)

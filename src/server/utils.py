@@ -24,13 +24,13 @@ def test_timeStampToTimer() -> None:
 def calcRelScore(mapX, mapY, teamScore) -> float:
    return truncate((teamScore / (mapX * mapY) * 500), 1)
 
+def test_calcRelScore():
+   assert calcRelScore(26, 12, 2) == 3.2
+
 def updateScore(teamPossession, teamScore, mapX, mapY) -> tuple[int, int]:
    teamPossession = teamPossession + 1
    teamScore = calcRelScore(mapX, mapY, teamPossession)
    return (teamPossession, teamScore)
-
-def test_calcRelScore():
-   assert calcRelScore(26, 12, 2) == 3.2
 
 def updatePossession(Map:dict[Any], mapX, mapY) -> tuple[float, float]:
     team1Possession = 0
@@ -46,4 +46,11 @@ def updatePossession(Map:dict[Any], mapX, mapY) -> tuple[float, float]:
                     team2Possession, team2Score = updateScore(team2Possession, team2Score, mapX, mapY)
     return (team1Score, team2Score)
 
-   
+# def test_updatePossession():
+#     map = [
+#         [1, 1, 1],
+#         [2, 2, 2]
+#     ]
+#     mapSurface = len(map) * len(map[0])
+
+    

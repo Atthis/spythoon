@@ -4,9 +4,9 @@
 
 ## Description
 
-Spythoon est un jeu développé en Python, s'appuyant sur la librairie [PytactX par Jusdeliens](https://jusdeliens.com/). Il s'inspire du jeu vidéo Splatoon®.
+Spythoon est un jeu développé en Python, s'appuyant sur la librairie [PytactX par Jusdeliens](https://jusdeliens.com/). et inspiré du jeu vidéo Splatoon®.
 
-Une équipe de 3 robots se défient sur une arène, dans l'objectif de recouvrir la plus grande surface de cette arène de la couleur de son équipe dans le temps imparti.
+> Une équipe de 3 robots se défient sur une arène, dans l'objectif de recouvrir la plus grande surface de cette arène de la couleur de son équipe dans le temps imparti.
 
 ![maquette du jeu](docs/maquette.png)
 
@@ -19,9 +19,8 @@ _Taille du terrain : 12x26_
 
 ### Capacités de l'agent du joueur
 
-- Apparition dans l'arène, dans une zone d'équipe circulaire définie en amont par la carte
-- Se déplacer sur la carte en relatif, en X et en Y, sur la direction du regard
-- Pivoter sur lui-même dans les 4 directions : N, S, E, W
+-[x] Apparition dans l'arène, dans une zone d'équipe circulaire définie en amont par la carte -[x] Se déplacer sur la carte en relatif, en X et en Y, sur la direction du regard -[x] Pivoter sur lui-même dans les 4 directions : N, S, E, W
+
 - Identifier si une case est "neutre" (= sans peinture) / Identifier si une case est recouverte de sa couleur ou de celle de l'adversaire. Identifie les cases sur une surface de 5x5 cases.
 - Activer le spray pour colorer les cases
   - Lorsque on active le spray, toutes les cases sur lesquelles le robot passe se colorent de la couleur de l'équipe de manière permanente tant qu'un adversaire ne passe pas dessus
