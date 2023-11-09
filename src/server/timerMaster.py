@@ -1,7 +1,4 @@
-# Referee interface
-from typing import Callable, Any
-import time
-import j2l.pytactx.agent as pytactx
+from typing import Any
 from utils import *
 
 class ITimerMaster:

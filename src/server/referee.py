@@ -1,11 +1,11 @@
-# Referee interface
 from typing import Callable, Any
 import time
 from utils import *
 
 import j2l.pytactx.agent as pytactx
-import timerMaster
+import timerMaster, scoreDealer
 
+# Referee interface
 class IReferee:
     def update(self) -> None:
         """
@@ -53,12 +53,6 @@ class IReferee:
         """
         ...
 
-    def resetTeamScores(self) -> tuple[int, int]:
-        """
-        Set the teams score to 0
-        """
-        ...
-
     def updateRefereeMap(self, x: int, y: int, value:int) -> [[int]]:
         """
         update the referee map
@@ -80,18 +74,6 @@ class IReferee:
     def setPlayerProfileOnFire(self, player:dict[str, Any]) -> None:
         """
         set the player profile depending on if it is firing or not
-        """
-        ...
-
-    def updatePossessions(self, map:[[int]]) -> tuple[int, int]:
-        """
-        Calculate the number of tiles each team own, and return the values
-        """
-        ...
-
-    def updateScores(self, map:[[int]]) -> tuple[float, float]:
-        """
-        Calcul teams scores depending on map tiles status, and return new scores
         """
         ...
 
@@ -118,6 +100,7 @@ class Referee(IReferee):
         self.__pytactxAgent = pytactx.Agent(playerId, arena, username, password, server, port)
 
         self.__timeMaster = timerMaster.TimerMaster()
+        self.__scoreDealer = scoreDealer.ScoreDealer()
 
         self.__pytactxAgent.team = 0
         self.__pytactxAgent.profile = 2
@@ -155,7 +138,7 @@ class Referee(IReferee):
         self.__pytactxAgent.ruleArena("reset", True)
 
     def resetTeamScores(self) -> tuple[int, int]:
-        return (0, 0)
+        return self.__scoreDealer.resetTeamScores()
 
     def updateRefereeMap(self, x: int, y: int, value:int) -> [[int]]:
         self.__map[y][x] = value
@@ -175,24 +158,10 @@ class Referee(IReferee):
 
 
     def updatePossessions(self, map:[[int]]) -> tuple[int, int]:
-        team1Possession = 0
-        team2Possession = 0
-        for row in map :
-            for tileValue in row:
-                match tileValue:
-                    case 1:
-                        team1Possession += 1
-                    case 2:
-                        team2Possession += 1
-        return (team1Possession, team2Possession)
+        return self.__scoreDealer.updatePossessions(map)
 
     def updateScores(self, map:[[int]]) -> tuple[float, float]:
-        team1Score = 0
-        team2Score = 0
-        team1Possession, team2Possession = updatePossession(map)
-        team1Score = calcRelScore(map, team1Possession)
-        team2Score = calcRelScore(map, team2Possession)
-        return (team1Score, team2Score)
+        return self.__scoreDealer.updateScores(map)
 
     def decreasePlayerAmmo(self, player:dict[str, Any]) -> None:
         self.__pytactxAgent.rulePlayer(player["clientId"], "ammo", player["ammo"] - 1)
