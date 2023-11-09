@@ -2,6 +2,7 @@
   "arenaRules": {
     "gridColumns": 26,
     "gridRows": 12,
+    "bgImg": "https://raw.githubusercontent.com/Atthis/spythoon/main/docs/bgArena.jpg",
     "bgColor": [0, 0, 0, 1],
     "mapFriction": [0.0, 0.0, 0.0, 1.0],
     "mapImgs": ["", "rgba(255,55,223, 1)", "rgba(0, 125, 153, 1)", ""],
