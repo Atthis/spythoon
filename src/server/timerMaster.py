@@ -1,38 +1,69 @@
 from typing import Any
+from j2l.pytactx.agent import Agent
 
 class ITimerMaster:
-    def setPartyTimer(self, timer:int) -> None:
+    def start(self) -> None:
         """
-        Set the party duration, in seconds
+        Start the time master, saving the current timestamp
         """
         ...
 
-    def getPartyTimer(self) -> int:
+    def getRoundDuration(self) -> int:
         """
         return the party timer
         """
         ...
 
-    def updatePartyTimer(self, startTimestamp: int) -> int:
+    def setRoundDuration(self, timer:int) -> None:
         """
-        Update the party timer based on the startTimestamp and the currTimestamp
+        Set the party duration, in seconds
+        """
+        ...
+
+    def getCurrTimestamp(self) -> int:
+        """
+        Return the current timestamp from the server
+        """
+        ...
+
+    def getRemainingTime(self) -> int:
+        """
+        Return remaining time based on the startTimestamp and the currTimestamp
+        """
+        ...
+
+    def setRemainingTime(self) -> None:
+        """
+        set the remaining time depending on the elapsed time
         """
         ...
 
 class TimerMaster(ITimerMaster):
-    def __init__(self) -> None:
-        self.partyTimer = 0
+    def __init__(self, agent: Agent, roundDuration: int=300) -> None:
+        self.__pytactxAgent = agent
+        self.__roundDuration = roundDuration
+        self.__startTimestamp = None
+        self.__remainingTime = None
 
-    def getPartyTimer(self) -> int:
-        return self.partyTimer
+    def start(self) -> None:
+        self.__startTimestamp = self.__pytactxAgent.game["t"]
 
-    def setPartyTimer(self, timer:int) -> Any:
+    def getRoundDuration(self) -> int:
+        return self.__roundDuration
+
+    def setRoundDuration(self, timer:int) -> Any:
         if timer < 0:
             return "Merci de fournir un entier positif"
-        self.partyTimer = timer
-        return self.partyTimer
+        self.__roundDuration = timer
+        return self.__roundDuration
 
-    def updatePartyTimer(self, startTimestamp: int, currTimestamp: int) -> int:
-        deltaTime = (currTimestamp - startTimestamp) // 1000
-        remainingTime = self.partyTimer - deltaTime
-        return remainingTime
+    def getCurrTimestamp(self) -> int:
+        return self.__pytactxAgent.game["t"]
+
+    def getRemainingTime(self) -> int:
+        self.setRemainingTime()
+        return self.__remainingTime
+
+    def setRemainingTime(self) -> None :
+        deltaTime = (self.getCurrTimestamp() - self.__startTimestamp) // 1000
+        self.__remainingTime = self.__roundDuration - deltaTime

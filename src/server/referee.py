@@ -119,15 +119,18 @@ class IReferee:
         ...
 
 class Referee(IReferee):
-    def __init__(self, playerId:str or None=None, arena:str or None=None, username:str or None=None, password:str or None=None, server:str or None=None, port:int=1883) -> None:
+    def __init__(self, playerId:str or None=None, arena:str or None=None, username:str or None=None, password:str or None=None, server:str or None=None, port:int=1883, roundDuration: int=300) -> None:
         self.__pytactxAgent = pytactx.Agent(playerId, arena, username, password, server, port)
 
-        self.__timeMaster = timerMaster.TimerMaster()
+        self.__timeMaster = timerMaster.TimerMaster(self.__pytactxAgent, roundDuration)
         self.__scoreDealer = scoreDealer.ScoreDealer()
 
         self.__pytactxAgent.team = 0
         self.__pytactxAgent.profile = 2
         self.__map = self.__pytactxAgent.game["map"]
+        self.__oldRange = None
+
+        self.__scoreDealer.resetTeamScores()
 
         while len(self.__pytactxAgent.game) == 0:
             self.__pytactxAgent.lookAt((self.__pytactxAgent.dir+1) %4)
@@ -166,15 +169,8 @@ class Referee(IReferee):
     def resetArena(self) -> None:
         self.__pytactxAgent.ruleArena("reset", True)
 
-#######################
-    # def resetMap(self) -> None:
-    #     for row  in self.map:
-    #         for index, tile in enumerate(row):
-    #             tile = 0
-#######################      
-
-    def resetTeamScores(self) -> tuple[int, int]:
-        return self.__scoreDealer.resetTeamScores()
+    def setRefereeMap(self, map:[[int]]) -> None:
+        self.__map = map     
 
     def getRefereeMap(self) -> [[int]]:
         return self.__map
@@ -185,17 +181,23 @@ class Referee(IReferee):
     def updateArenaMap(self) -> None:
         self.__pytactxAgent.ruleArena("map", self.__map)
 
+    def getOldRange(self) -> dict[str, Any]:
+        return self.__oldRange
+    
+    def setOldRange(self, range: dict[str, Any]) -> None :
+        self.__oldRange = range
+
     def getCurrentRange(self) -> dict[str, Any]:
         return self.__pytactxAgent.range
 
     def setPlayerProfileOnFire(self, player:dict[str, Any]) -> None:
-        if player["fire"]:
+        if self.getCurrentRange()[player["clientId"]]["nFire"] > self.getOldRange()[player["clientId"]]["nFire"]:
             self.__pytactxAgent.rulePlayer(player["clientId"], "profile", 1)
         else:
             self.__pytactxAgent.rulePlayer(player["clientId"], "profile", 0)
 
-    def _updatePossessions(self, map:[[int]]) -> tuple[int, int]:
-        return self.__scoreDealer._updatePossessions(map)
+    def getTeamsScores(self) -> tuple[int, int]:
+        return self.__scoreDealer.getTeamsScores()
 
     def updateScores(self, map:[[int]]) -> tuple[float, float]:
         return self.__scoreDealer.updateScores(map)
@@ -203,19 +205,13 @@ class Referee(IReferee):
     def decreasePlayerAmmo(self, player:dict[str, Any]) -> None:
         self.__pytactxAgent.rulePlayer(player["clientId"], "ammo", player["ammo"] - 1)
 
-    def getPartyTimer(self) -> int:
-        return self.__timeMaster.partyTimer
+    def startTimeMaster(self) -> None:
+        self.__timeMaster.start()
 
-    def setPartyTimer(self, timer:int) -> Any:
-        return self.__timeMaster.setPartyTimer(timer)
-
-    def updatePartyTimer(self, startTimestamp: int) -> int:
-        return self.__timeMaster.updatePartyTimer(startTimestamp, self.getCurrTimestamp())
-
-    def getCurrTimestamp(self) -> int:
-        return self.__pytactxAgent.game["t"]
+    def getRemainingTime(self) -> int:
+        return self.__timeMaster.getRemainingTime()
 
     def isGameOver(self) -> bool:
-        if self.getPartyTimer() <= 0:
+        if self.__timeMaster.getRemainingTime() <= 0:
             return True
         return False

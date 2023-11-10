@@ -1,5 +1,5 @@
 # Player interface
-from typing import Callable, Any
+from typing import Any
 import time
 import j2l.pytactx.agent as pytactx
 

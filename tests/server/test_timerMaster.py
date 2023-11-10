@@ -17,19 +17,19 @@ def createMaster():
 
 timeMaster = createMaster()
 
-def test_setPartyTimer():
+def test_setRoundDuration():
     timer = -10
-    assert timeMaster.setPartyTimer(timer) == "Merci de fournir un entier positif"
+    assert timeMaster.setRoundDuration(timer) == "Merci de fournir un entier positif"
     
     timer = 599
-    assert timeMaster.setPartyTimer(timer) == 599
+    assert timeMaster.setRoundDuration(timer) == 599
 
 def test_getPartyTime():
-    timeMaster.setPartyTimer(577)
-    assert timeMaster.getPartyTimer() == 577
+    timeMaster.setRoundDuration(577)
+    assert timeMaster.getRoundDuration() == 577
 
-def test_updatePartyTimer():
+def test_updateRoundDuration():
     startTS = 10000
     currTS = 15000
-    timeMaster.setPartyTimer(20)
-    assert timeMaster.updatePartyTimer(startTS, currTS) == 15
+    timeMaster.setRoundDuration(20)
+    assert timeMaster.updateRoundDuration(startTS, currTS) == 15

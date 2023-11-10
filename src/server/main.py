@@ -2,7 +2,6 @@
 import time
 import os
 import json
-import copy
 
 # File directory definition
 __fileDir__ = os.path.dirname(os.path.abspath(__file__))
@@ -16,13 +15,13 @@ USERNAME=os.getenv('USERNAME')
 PASSWORD=os.getenv('PASSWORD')
 SERVER=os.getenv('SERVER')
 PORT=int(os.getenv('PORT'))
+DURATION=int(os.getenv('DURATION'))
 
-# Import pytactX class and utils
-import j2l.pytactx.agent as pytactx
+# # Import referee class and utils
 from referee import Referee
 from utils import *
 
-# Import json rules file
+# # Import json rules file
 # Try catch to retrieve rules data
 try:
     with open(os.path.join(__fileDir__, 'serverRules.json')) as json_data:
@@ -30,75 +29,95 @@ try:
 except Exception as e:
     print(f"Une erreur est survenue dans le chargement des données : {e}")
 
-# Referee creation
+# # Referee creation
 # referee = pytactx.Agent(ARBITRE, ARENA, USERNAME, PASSWORD, SERVER, PORT)
-referee = Referee(ARBITRE, ARENA, USERNAME, PASSWORD, SERVER, PORT)
+referee = Referee(ARBITRE, ARENA, USERNAME, PASSWORD, SERVER, PORT, DURATION)
 referee.printInfoToArena("⌛ Initialisation de l'arbitre...")
 
-# Reset arena
+# # Reset arena
 # referee.openArena(True)
 referee.resetArena()
 referee.update()
-time.sleep(1)
+time.sleep(3)
+referee.update()
+
+# # Set Referee map to Arena map
+referee.setRefereeMap(referee.getGameInfos()["map"])
+referee.update()
+time.sleep(0.3)
 
 # # Define arena rules from the json
 referee.setArenaRules(serverRulesdict)
 referee.update()
 time.sleep(1)
 
-
 # # Create players and their rules from the json
 referee.createPlayers(serverRulesdict)
 referee.update()
 time.sleep(0.3)
 
-# Close arena to new player
+# # Close arena to new player
 # referee.openArena(False)
 # referee.update()
 # time.sleep(0.3)
 
+referee.printInfoToArena("⌛ En attente des joueurs ...")
+referee.update()
+time.sleep(10)
+### TODO Wait for all players to connect 
+readyPlayers = []
+print(referee.getCurrentRange())
 
-# Retrieve map status
-time.sleep(5)
-# referee.updateRefereeMap(referee.getGameInfos()["map"])
+while len(readyPlayers) < len(referee.getCurrentRange()):
+    referee.update()
+    time.sleep(0.3)
+    for player in referee.getCurrentRange().values():
+        if not player["idle"]:
+            if player["clientId"] not in readyPlayers :
+                readyPlayers.append(player["clientId"])
+    print(readyPlayers)
 
-# Set starting scores
-team1Score, team2Score = referee.resetTeamScores()
-
-# Launch party msg
+# # Launch party msg
 referee.printInfoToArena("🟢 C'est parti !")
 referee.update()
 time.sleep(2)
 
-# Reset party timer and retrieve current timestamp
-referee.setPartyTimer(300)
-
-# 
-referee.printInfoToArena(f"| ⏰ {secondsToMinutesSeconds(referee.getPartyTimer())} | 👑 🍉 Fuschia : {team1Score} / 🫐 Turquoise : {team2Score}.")
+# # Timer and scores msg
+referee.printInfoToArena(f"| ⏰ {secondsToMinutesSeconds(DURATION)} | 👑 🍉 Fuschia : {referee.getTeamsScores()[0]} / 🫐 Turquoise : {referee.getTeamsScores()[1]}.")
 referee.update()
 time.sleep(0.3)
 
+# # Request current timestamp
+referee.startTimeMaster()
 
-# Request current timestamp
-startTimestamp = referee.getCurrTimestamp()
+referee.setOldRange(referee.getCurrentRange())
 
-# Main loop for referee update 
-while True:
-    # referee direction changes to apply updates
+# # Main loop for referee update 
+while not referee.isGameOver() :
+    # #  referee direction changes to apply updates
     referee.rotate((referee.getDir()+1)%4)
 
+    # # For each player
     for player in referee.getCurrentRange().values():
+        # Set profile
         referee.setPlayerProfileOnFire(player)
 
-        if player["fire"] and player["ammo"]:
+        # If fire and ammo
+        if referee.getCurrentRange()[player["clientId"]]["nFire"] > referee.getOldRange()[player["clientId"]]["nFire"]:
+            # Update tile status
             referee.updateRefereeMap(player["x"], player["y"], player["team"])
-            team1Score, team2Score = referee.updateScores(referee.getRefereeMap())
-            referee.printInfoToArena(f"Scores - team 1 : {team1Score} / team 2 : {team2Score}.")
+            # Update teams score
+            referee.updateScores(referee.getRefereeMap())
+            # Decrease player ammo
             referee.decreasePlayerAmmo(player)
+            # Push new map state to the server
             referee.updateArenaMap()
-    
-    remainingTime = secondsToMinutesSeconds(referee.updatePartyTimer(startTimestamp))
-    referee.printInfoToArena(f"| ⏰ {remainingTime} | 👑 🍉 Fuschia : {team1Score} / 🫐 Turquoise : {team2Score}.")
 
-    # Envoi des requetes et reception des MAJ du serveur
+    # # Calcul remaining time and Update arena info with new time and scores
+    referee.printInfoToArena(f"| ⏰ {secondsToMinutesSeconds(referee.getRemainingTime())} | 👑 🍉 Fuschia : {referee.getTeamsScores()[0]} / 🫐 Turquoise : {referee.getTeamsScores()[1]}.")
+
+    # # Sent all requests to server
     referee.update()
+
+referee.printInfoToArena(f"| 🔔 PARTIE TERMINEE ! | 👑 🍉 Fuschia : {referee.getTeamsScores()[0]} / 🫐 Turquoise : {referee.getTeamsScores()[1]}.")
+referee.update()

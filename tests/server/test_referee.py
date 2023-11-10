@@ -78,16 +78,16 @@ referee.update()
 
 
 ## TESTS TIMERMASTER INSTANCE FUNCTIONS
-print("---setPartyTimer---")
-print(referee.setPartyTimer(-10)) # Merci de fournir un entier positif
-print(referee.setPartyTimer(20)) # 20
+print("---setRoundDuration---")
+print(referee.setRoundDuration(-10)) # Merci de fournir un entier positif
+print(referee.setRoundDuration(20)) # 20
 
-print("---getPartyTimer---")
-print(referee.getPartyTimer()) # 20
+print("---getRoundDuration---")
+print(referee.getRoundDuration()) # 20
 
-print("---updatePartyTimer---")
-referee.updatePartyTimer(10)
-print(referee.getPartyTimer()) # 15
+print("---updateRoundDuration---")
+referee.updateRoundDuration(10)
+print(referee.getRoundDuration()) # 15
 
 ## TESTS TIMEDEALER INSTANCE FUNCTIONS
 print("---resetTeamScore---")

@@ -2,6 +2,12 @@ from typing import Any
 from utils import *
 
 class IScoreDealer:
+    def getTeamsScores(self) -> tuple[int, int]:
+        """
+        Return teams scores
+        """
+        ...
+        
     def resetTeamScores(self) -> tuple[int, int]:
         """
         Set the teams score to 0
@@ -23,10 +29,15 @@ class IScoreDealer:
 
 class ScoreDealer(IScoreDealer):
     def __init__(self) -> None:
-        ...
+        self.__team1Score = None
+        self.__team2Score = None
 
-    def resetTeamScores(self) -> tuple[int, int]:
-        return (0, 0)
+    def getTeamsScores(self) -> tuple[int, int]:
+        return (self.__team1Score, self.__team2Score)
+
+    def resetTeamScores(self) -> None:
+        self.__team1Score = 0
+        self.__team2Score = 0
 
     def _updatePossessions(self, map:[[int]]) -> tuple[int, int] or str:
         if not map:
@@ -46,10 +57,10 @@ class ScoreDealer(IScoreDealer):
     def updateScores(self, map:[[int]]) -> tuple[float, float]:
         if not map:
             print("!! ERREUR la map est vide !")
-            return ""
-        team1Score = 0
-        team2Score = 0
+            return
+        self.__team1Score = 0
+        self.__team2Score = 0
         team1Possession, team2Possession = self._updatePossessions(map)
-        team1Score = calcRelScore(map, team1Possession)
-        team2Score = calcRelScore(map, team2Possession)
-        return (team1Score, team2Score)
+        self.__team1Score = calcRelScore(map, team1Possession)
+        self.__team2Score = calcRelScore(map, team2Possession)
+        return (self.__team1Score, self.__team2Score)
