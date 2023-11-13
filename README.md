@@ -12,7 +12,7 @@ Spythoon est un jeu développé en Python, s'appuyant sur la librairie [PytactX 
 
 J'ai développé ce jeu dans le cadre d'une formation en développement d'applications. Le sujet du module portait sur le langage Python et le bonnes pratiques de programmation (SOLID, POO, ...).
 
-<!-- L'objectif a été de réaliser un  -->
+L'objectif a été de réaliser un jeu pour des apprenants, afin de s'initier à la programmation et à Python.
 
 ## Règles du jeu
 

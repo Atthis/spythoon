@@ -112,7 +112,6 @@ class PytactxPainter(IPainter):
         self.__pytactxAgent.update()
     
     def move(self) -> None:
-        print(self.__pytactxAgent.dir)
         match (self.__pytactxAgent.dir):
             case 0:
                 self.__pytactxAgent.move(1, 0)
