@@ -64,9 +64,8 @@ time.sleep(0.3)
 referee.printInfoToArena("⌛ En attente des joueurs ...")
 referee.update()
 time.sleep(10)
-### TODO Wait for all players to connect 
+### Wait for all players to connect 
 readyPlayers = []
-print(referee.getCurrentRange())
 
 while len(readyPlayers) < len(referee.getCurrentRange()):
     referee.update()
