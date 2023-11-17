@@ -1,3 +1,4 @@
 **/__pycache__/
 *.py[cod]
 .env
+/src/gui/projet_alexandre
