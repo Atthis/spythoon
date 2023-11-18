@@ -27,12 +27,14 @@ _Taille du terrain : 12x26_
 
 ### Capacités de l'agent du joueur
 
--[x] Apparition dans l'arène, dans une zone d'équipe circulaire définie en amont par la carte -[x] Se déplacer sur la carte en relatif, en X et en Y, sur la direction du regard -[x] Pivoter sur lui-même dans les 4 directions : N, S, E, W
+- [x] Apparition dans l'arène, dans une zone d'équipe circulaire définie en amont par la carte
+- [x] Se déplacer sur la carte en relatif, en X et en Y, sur la direction du regard
+- [x] Pivoter sur lui-même dans les 4 directions : N, S, E, W
 
 - Identifier si une case est "neutre" (= sans peinture) / Identifier si une case est recouverte de sa couleur ou de celle de l'adversaire. Identifie les cases sur une surface de 5x5 cases.
-- Activer le spray pour colorer les cases
-  - Lorsque on active le spray, toutes les cases sur lesquelles le robot passe se colorent de la couleur de l'équipe de manière permanente tant qu'un adversaire ne passe pas dessus
-  - Lorsque le spray est activée, la vitesse de déplacement du robot est réduite
+- [x] Activer le spray pour colorer les cases
+  - [x] Lorsque on active le spray, toutes les cases sur lesquelles le robot passe se colorent de la couleur de l'équipe de manière permanente tant qu'un adversaire ne passe pas dessus
+  - [x]Lorsque le spray est activée, la vitesse de déplacement du robot est réduite
 - Recouvrir les cases déjà couvertes par un adversaire lorsque l'agent arrive dessus
 - il est possible de savoir quel agent se trouve dans notre range, et d'identifier si c'est un allié ou un ennemi
 

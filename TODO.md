@@ -20,7 +20,7 @@
 
 #### Choses à voir
 
-- superposer 2 éléments l'un sur l'autre
+- [x] ajouter une image de fond à un widget
+- [x] superposer 2 éléments l'un sur l'autre
 - caler toute l'interface pour avoir quelque chose de propre
-- ajouter une image de fond à un widget
--
+- comment brancher les données reçues via Pytactx à l'interface ?
