@@ -1,0 +1,26 @@
+QMainWindow {
+    background-color: rgb(255, 255, 255);
+}
+
+QLabel {
+    font-family: Impact;
+}
+
+#team1Infos,
+#team2Infos {
+    font-size: 50px;    
+}
+
+#team1Infos {
+    text-align: left;
+    color: rgb(255,55,223);
+}
+
+#team2Infos {
+    text-align: right;
+    color: rgb(0, 125, 153);
+}
+
+#timeInfos {
+    font-size: 80px;
+}

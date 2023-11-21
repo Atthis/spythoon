@@ -72,6 +72,11 @@ screenSize = QSize(1600, 800)
 window = MainWindow()
 window.show()  # IMPORTANT!!!!! Windows are hidden by default.
 
+# Import styling
+with open(os.fspath(CURR_DIR / 'appStyle.qss'), 'r') as styleFile:
+    appStyle = styleFile.read()
+    app.setStyleSheet(appStyle)
+
 # Start the event loop.
 app.exec()
 
