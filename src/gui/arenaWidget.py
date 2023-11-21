@@ -1,9 +1,6 @@
-from random import choice, randint
-import typing
-from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import QSize, Qt, QPoint
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, QWidget, QGridLayout, QStackedLayout
-from PyQt5.QtGui import QPalette , QColor, QBrush, QImage, QPixmap
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget, QGridLayout, QStackedLayout
+from PyQt5.QtGui import QPalette , QColor, QBrush, QPixmap
 
 # Only needed for access to command line arguments
 import sys
@@ -56,7 +53,7 @@ class ArenaGrid(QWidget):
 
         self.objectName = 'arenaGrid'
         self.parent = parent
-        self.setFixedSize(QWidget.minimumSize(self))
+        # self.setFixedSize(QWidget.minimumSize(self))
 
         # Layout settings
         self._layout = QGridLayout()
@@ -92,8 +89,9 @@ class ArenaBg(QWidget):
         super().__init__(parent)
 
         self.objectName = 'arenaBackground'
-        self.setFixedSize(width, height)
+        # self.setFixedSize(width, height)
         self.setAutoFillBackground(True)
+
 
         # Background definition        
         pixmap = QPixmap(os.fspath(CURR_DIR / img))
@@ -119,7 +117,7 @@ class ArenaWidget(QWidget):
         layout = QStackedLayout(self, objectName = "mainLayout")
         self.setLayout(layout)
 
-        arenaBg = ArenaBg(1300, 600, 'bgArena.jpg', self)
+        arenaBg = ArenaBg(1300, 600, 'bgArena_v2.jpg', self)
         arenaGrid = ArenaGrid(12, 26, Tile, 50, self)
 
         layout.insertWidget(0, arenaBg)
@@ -128,9 +126,9 @@ class ArenaWidget(QWidget):
         layout.setCurrentIndex(1)
 
         # Coloring the spawn areas for test
-        arenaGrid.setTileColor(3, 1, 150, 150, 0, 255)
-        arenaGrid.setTileColor(2, 2, 150, 150, 0, 255)
-        arenaGrid.setTileColor(1, 3, 150, 150, 0, 255)
-        arenaGrid.setTileColor(24, 8, 0, 0, 150, 255)
-        arenaGrid.setTileColor(23, 9, 0, 0, 150, 255)
-        arenaGrid.setTileColor(22, 10, 0, 0, 150, 255)
+        # arenaGrid.setTileColor(3, 1, 150, 150, 0, 255)
+        # arenaGrid.setTileColor(2, 2, 150, 150, 0, 255)
+        # arenaGrid.setTileColor(1, 3, 150, 150, 0, 255)
+        # arenaGrid.setTileColor(24, 8, 0, 0, 150, 255)
+        # arenaGrid.setTileColor(23, 9, 0, 0, 150, 255)
+        # arenaGrid.setTileColor(22, 10, 0, 0, 150, 255)
