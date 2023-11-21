@@ -1,11 +1,11 @@
 ### TODO
 
-- definir des comportements specifiques pour pouvoir tester les differentes fonctions des joueurs -> fichier test_server
+- [ ] definir des comportements specifiques pour pouvoir tester les differentes fonctions des joueurs -> fichier test_server
 - [x] clarifier les différentes fonctions et refactoriser si possible
 - [x] créer un bg sympa pour le fond de carte
-- travailler sur le readme afin qu'il explicite les différentes règles du jeu
-- diminuer la portée du range des joueurs
-- diminuer la portée de la map pour voir moins de cases
+- [ ] travailler sur le readme afin qu'il explicite les différentes règles du jeu
+- [ ] diminuer la portée du range des joueurs
+- [ ] diminuer la portée de la map pour voir moins de cases
 
 ### TODO bonus
 
@@ -22,5 +22,11 @@
 
 - [x] ajouter une image de fond à un widget
 - [x] superposer 2 éléments l'un sur l'autre
-- caler toute l'interface pour avoir quelque chose de propre
-- comment brancher les données reçues via Pytactx à l'interface ?
+- [ ] caler toute l'interface pour avoir quelque chose de propre
+- [ ] brancher les données reçues via Pytactx à l'interface
+
+### Interrogations PyQt5
+
+- Comment gérer le dimensionnement de la fenêtre et de ses éléments
+- Créer plusieurs fenêtres dans l'application (fenêtre de connexion / fenêtre d'arène)
+- Mettre la fenêtre en plein écran, et avoir des scroll bar si jamais la fenêtre est trop petite
