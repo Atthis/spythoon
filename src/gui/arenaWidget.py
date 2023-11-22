@@ -1,9 +1,8 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QGridLayout, QStackedLayout
 from PyQt5.QtGui import QPalette , QColor, QBrush, QPixmap
+from utils import BgSetter
 
-# Only needed for access to command line arguments
-import sys
 import os
 from pathlib import Path
 # Define current path for assets
@@ -80,27 +79,6 @@ class ArenaGrid(QWidget):
         self._layout.itemAtPosition(posY, posX).widget().setColor(r, g, b, a)
 
 
-# ARENA BACKGROUND CLASS TO DISPLAY THE ARENA BACKGROUND
-class ArenaBg(QWidget):
-    """
-    Class for creating the background of the arena
-    """
-    def __init__(self, width:int, height:int, img:str, parent: QWidget | None = ...) -> None:
-        super().__init__(parent)
-
-        self.objectName = 'arenaBackground'
-        # self.setFixedSize(width, height)
-        self.setAutoFillBackground(True)
-
-
-        # Background definition        
-        pixmap = QPixmap(os.fspath(CURR_DIR / img))
-        palette = self.palette()
-        brush = QBrush(pixmap.scaled(width, height, Qt.IgnoreAspectRatio))
-        palette.setBrush(QPalette.Window, brush)
-        self.setPalette(palette)
-
-
 # GLOBAL ARENA WIDGET
 class ArenaWidget(QWidget):
     """
@@ -117,7 +95,7 @@ class ArenaWidget(QWidget):
         layout = QStackedLayout(self, objectName = "mainLayout")
         self.setLayout(layout)
 
-        arenaBg = ArenaBg(1300, 600, 'bgArena_v2.jpg', self)
+        arenaBg = BgSetter("arenaBg", 'bgArena_v2.jpg', CURR_DIR, 1300, 600, self)
         arenaGrid = ArenaGrid(12, 26, Tile, 50, self)
 
         layout.insertWidget(0, arenaBg)
