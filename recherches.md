@@ -16,3 +16,12 @@ https://stackoverflow.com/questions/63266084/how-to-align-widgets-in-pyqt5
 ## Stacked layout
 
 https://doc.qt.io/qtforpython-5/PySide2/QtWidgets/QStackedLayout.html#PySide2.QtWidgets.PySide2.QtWidgets.QStackedLayout.StackingMode
+
+## Style de l'app desktop
+
+https://doc.qt.io/qtforpython-5/tutorials/basictutorial/widgetstyling.html#qt-style-sheets
+https://doc.qt.io/qt-5/stylesheet-reference.html#list-of-properties
+
+## Game loop
+
+https://pythonpyqt.com/qtimer/

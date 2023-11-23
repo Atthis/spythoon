@@ -17,7 +17,7 @@ class BgSetter(QWidget):
         self.setAutoFillBackground(True)
 
         # Background definition        
-        pixmap = QPixmap(os.fspath(currDir / "assets" / img))
+        pixmap = QPixmap(os.path.join(currDir, "assets", img))
         palette = self.palette()
         brush = QBrush(pixmap.scaled(width, height, Qt.IgnoreAspectRatio))
         palette.setBrush(QPalette.Window, brush)
