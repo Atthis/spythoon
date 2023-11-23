@@ -1,9 +1,19 @@
 from typing import Any
 import time
 # from utils import *
+import sys
+import os
+
+CURR_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LIB_DIR = os.path.dirname(CURR_DIR)
+sys.path.append(LIB_DIR)
+SRC_DIR = os.path.join(LIB_DIR , 'src', 'api')
+sys.path.append(SRC_DIR)
 
 import j2l.pytactx.agent as pytactx
-import timerMaster, scoreDealer
+# import timerMaster, scoreDealer
+from src.server.timerMaster import TimerMaster
+from src.server.scoreDealer import ScoreDealer
 
 # Referee interface
 class IReferee:
@@ -122,8 +132,8 @@ class Referee(IReferee):
     def __init__(self, playerId:str or None=None, arena:str or None=None, username:str or None=None, password:str or None=None, server:str or None=None, port:int=1883, roundDuration: int=300) -> None:
         self.__pytactxAgent = pytactx.Agent(playerId, arena, username, password, server, port)
 
-        self.__timeMaster = timerMaster.TimerMaster(self.__pytactxAgent, roundDuration)
-        self.__scoreDealer = scoreDealer.ScoreDealer()
+        self.__timeMaster = TimerMaster(self.__pytactxAgent, roundDuration)
+        self.__scoreDealer = ScoreDealer()
 
         self.__pytactxAgent.team = 0
         self.__pytactxAgent.profile = 2

@@ -1,5 +1,14 @@
 from typing import Any
-from utils import *
+
+import sys
+import os
+LIB_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+CURR_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(LIB_DIR)
+SRC_DIR = os.path.join(LIB_DIR , 'src')
+sys.path.append(SRC_DIR)
+
+from src.server.utils import *
 
 class IScoreDealer:
     def getTeamsScores(self) -> tuple[int, int]:
