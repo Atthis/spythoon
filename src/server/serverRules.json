@@ -11,7 +11,7 @@
     "profiles": ["default", "painter", "other", "referee"],
     "pIcons": ["", "🖌️", "👀"],
     "pImgs": ["ova.svg", "ova.svg", "ova.svg", "ball.svg"],
-    "range": [3, 3, 3, 0],
+    "range": [0, 0, 0, 0],
     "dtDir": [300, 300, 300, 10],
     "dtMove": [300, 450, 300, 10],
     "weapon": [0, 0, 0, 1],
