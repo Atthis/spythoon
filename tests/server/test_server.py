@@ -49,12 +49,16 @@ agents = [agent1, agent2, agent3, agent4, agent5, agent6]
 # - 
 # - 
 
+print(agent1.scanNearbyPlayers())
+print(agent1.scanNearbyTiles())
 
 while True:
 
+    # agent1.move()
+    # agent1.rotate(random.randint(1, 100) %4)
+
     for agent in agents:
         agent.move()
-        agent.rotate(random.randint(1, 100) % 4)
         willFire = random.randint(1, 10)
 
         # agent.paint(True)
@@ -62,6 +66,7 @@ while True:
             agent.paint(True)
         else:
             agent.paint(False)
-
+            
+        agent.rotate(random.randint(1, 100) % 4)
         agent.update()
 
