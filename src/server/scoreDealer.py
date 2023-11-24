@@ -41,8 +41,8 @@ class ScoreDealer(IScoreDealer):
         self.__team1Score = None
         self.__team2Score = None
 
-    def getTeamsScores(self) -> tuple[int, int]:
-        return (self.__team1Score, self.__team2Score)
+    def getTeamsScores(self) -> tuple[str, str]:
+        return (f"{self.__team1Score:05.2f}", f"{self.__team2Score:05.2f}")
 
     def resetTeamScores(self) -> None:
         self.__team1Score = 0
