@@ -27,6 +27,12 @@ class IPainter:
         """
         ...
 
+    def getArenaInfos(self) -> str :
+        """
+        Return arena infos
+        """
+        ...
+
     def isPainting(self) -> bool:
         """
         Return True if painting is active, False if painting is inactive
@@ -103,6 +109,9 @@ class PytactxPainter(IPainter):
 
     def getTeam(self) -> int:
         return self.__pytactxAgent.team
+    
+    def getArenaInfos(self) -> str :
+        return self.__pytactxAgent.infoArena
 
     def isPainting(self) -> bool:
         return self.__pytactxAgent.isFiring
@@ -131,5 +140,5 @@ class PytactxPainter(IPainter):
     def scanNearbyTiles(self) -> dict[str,Any]:
         return self.__pytactxAgent.map
 
-    def scanNearbyPlayers(self) -> dict[str,Any]:
+    def scanNearbyPlayers(self) -> [[int]]:
         return self.__pytactxAgent.range

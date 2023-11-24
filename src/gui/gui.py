@@ -183,7 +183,9 @@ class MainWindow(QMainWindow):
         self.referee.gameLoopActions()
         currentMap = self.referee.scanNearbyTiles()
 
-        print(self.referee.getArenaInfos())
+        print(self.referee.scanNearbyPlayers())
+
+        arenaInfos = self.referee.getArenaInfos()
 
         self.updateMap(currentMap)
         # print(self.referee.getCurrentRange())

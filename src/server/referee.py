@@ -116,12 +116,6 @@ class IReferee:
         """
         ...
     
-    def getCurrTimestamp(self) -> int:
-        """
-        Retrieve current timestamp from the server
-        """
-        ...
-
     def isGameOver(self) -> bool:
         """
         Return true if game is over, depending on specific conditions
