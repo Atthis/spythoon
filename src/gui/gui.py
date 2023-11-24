@@ -108,12 +108,19 @@ class MainWindow(QMainWindow):
         self.connectReferee()
 
     ### Tile coloration tests
-    def updateMap(self, player) -> None:
-            match player["team"]:
-                case 1:
-                    self.arenaWidget.arenaGrid.setTileColor(player["x"], player["y"], 255, 55, 223, 122)
-                case 2:
-                    self.arenaWidget.arenaGrid.setTileColor(player["x"], player["y"], 0, 125, 153, 122)
+    def updateMap(self, map) -> None:
+        for rowIndex, row in enumerate(map):
+            for tileIndex, tile in enumerate(row):
+                match tile:
+                    case 1:
+                        self.arenaWidget.arenaGrid.setTileColor(tileIndex, rowIndex, 255, 55, 223, 122)
+                    case 2:
+                        self.arenaWidget.arenaGrid.setTileColor(tileIndex, rowIndex, 0, 125, 153, 122)
+            # match player["team"]:
+            #     case 1:
+            #         self.arenaWidget.arenaGrid.setTileColor(player["x"], player["y"], 255, 55, 223, 122)
+            #     case 2:
+            #         self.arenaWidget.arenaGrid.setTileColor(player["x"], player["y"], 0, 125, 153, 122)
 
     #### -- Connexion and game loop methods -- ####
     def connectReferee(self):
@@ -174,7 +181,11 @@ class MainWindow(QMainWindow):
 
     def onTimerUpdate(self):
         self.referee.gameLoopActions()
-        print(self.referee.scanNearbyTiles())
+        currentMap = self.referee.scanNearbyTiles()
+
+        print(self.referee.getArenaInfos())
+
+        self.updateMap(currentMap)
         # print(self.referee.getCurrentRange())
         # # #  referee direction changes to apply updates
         # self.referee.rotate((self.referee.getDir()+1)%4)
