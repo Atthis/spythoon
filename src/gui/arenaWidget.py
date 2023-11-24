@@ -29,7 +29,7 @@ class Tile(QWidget):
         palette.setColor(QPalette.Window, color)
         self.setPalette(palette)
     
-    # Mouse event coloration test
+    # # Mouse event coloration test
     # def mouseReleaseEvent(self, e) -> None:
     #     if e.button() == Qt.LeftButton:
     #         if self.palette().color(QPalette.Window).name(QColor.HexArgb) == '#00ffffff':
@@ -74,7 +74,7 @@ class ArenaGrid(QWidget):
 
     def setTileColor(self, posX:int, posY:int, r:int, g:int, b:int, a:int) -> None:
         """
-        Set color for a specific tile based on its position
+        Set color for a specific tile based on its position. Alpha value has to be an integer between 0 and 255.
         """
         self._layout.itemAtPosition(posY, posX).widget().setColor(r, g, b, a)
 
@@ -92,16 +92,16 @@ class ArenaWidget(QWidget):
         super().__init__(parent)
 
         self.objectName = 'arenaWidget'
-        layout = QStackedLayout(self, objectName = "mainLayout")
-        self.setLayout(layout)
+        self.layout = QStackedLayout(self, objectName = "mainLayout")
+        self.setLayout(self.layout)
 
-        arenaBg = BgSetter("arenaBg", 'bgArena_v2.jpg', CURR_DIR, 1300, 600, self)
-        arenaGrid = ArenaGrid(12, 26, Tile, 50, self)
+        self.arenaBg = BgSetter("arenaBg", 'bgArena_v2.jpg', CURR_DIR, 1300, 600, self)
+        self.arenaGrid = ArenaGrid(12, 26, Tile, 50, self)
 
-        layout.insertWidget(0, arenaBg)
-        layout.insertWidget(1, arenaGrid)
-        layout.setStackingMode(QStackedLayout.StackingMode.StackAll)
-        layout.setCurrentIndex(1)
+        self.layout.insertWidget(0, self.arenaBg)
+        self.layout.insertWidget(1, self.arenaGrid)
+        self.layout.setStackingMode(QStackedLayout.StackingMode.StackAll)
+        self.layout.setCurrentIndex(1)
 
         # Coloring the spawn areas for test
         # arenaGrid.setTileColor(3, 1, 150, 150, 0, 255)

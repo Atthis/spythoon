@@ -11,14 +11,6 @@ from PyQt5.QtGui import QPalette , QColor, QBrush, QImage, QPixmap
 # Only needed for access to command line arguments
 import sys
 import os
-# from pathlib import Path
-# Define current path for assets
-# CURR_DIR = Path(__file__).resolve().parent
-# LIB_DIR = CURR_DIR.resolve().parent.parent
-# sys.path.append(LIB_DIR)
-# SRC_DIR = os.path.join(LIB_DIR, 'src', 'server')
-# sys.path.append(SRC_DIR)
-# print(SRC_DIR)
 
 LIB_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CURR_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -30,6 +22,8 @@ from utils import BgSetter
 from arenaWidget import ArenaWidget
 from src.server.referee import Referee
 from src.server.utils import secondsToMinutesSeconds
+from src.api.spythoon import PytactxPainter
+from mainPlayer import MyPainter
 
 # ENV variables config
 from dotenv import load_dotenv
@@ -75,28 +69,28 @@ class MainWindow(QMainWindow):
         uiWidget.setLayout(uiLayout)
 
         # Infos widget : teams colors/numbers and timer
-        infosWidget = QWidget(uiWidget, objectName = "infosWidget")
+        self.infosWidget = QWidget(uiWidget, objectName = "infosWidget")
         # infosWidget.setMinimumHeight(300)
-        infosLayout = QHBoxLayout(infosWidget, objectName = "infosLayout")
+        infosLayout = QHBoxLayout(self.infosWidget, objectName = "infosLayout")
         infosLayout.setSpacing(100)
         infosLayout.addWidget(QLabel("Team #1", objectName = "team1Infos"))
         infosLayout.addWidget(QLabel("05:00", objectName = "timeInfos"))
         infosLayout.addWidget(QLabel("Team #2", objectName = "team2Infos"))
 
         # Arena init
-        arenaWidget = ArenaWidget(uiWidget)
+        self.arenaWidget = ArenaWidget(uiWidget)
 
         # Scores widget
-        scoreWidget = QWidget(uiWidget, objectName = "scoreWidget")
-        scoreLayout = QHBoxLayout(scoreWidget, objectName = "scoreLayout")
-        scoreWidget.setLayout(scoreLayout)
+        self.scoreWidget = QWidget(uiWidget, objectName = "scoreWidget")
+        scoreLayout = QHBoxLayout(self.scoreWidget, objectName = "scoreLayout")
+        self.scoreWidget.setLayout(scoreLayout)
         scoreLayout.setSpacing(300)
         scoreLayout.addWidget(QLabel("00.00", objectName = "Team1Score"))
         scoreLayout.addWidget(QLabel("00.00", objectName = "Team2Score"))
             
-        uiLayout.addWidget(infosWidget, 0, 0, Qt.AlignCenter)
-        uiLayout.addWidget(arenaWidget, 1, 0, Qt.AlignCenter)
-        uiLayout.addWidget(scoreWidget, 2, 0, Qt.AlignCenter)
+        uiLayout.addWidget(self.infosWidget, 0, 0, Qt.AlignCenter)
+        uiLayout.addWidget(self.arenaWidget, 1, 0, Qt.AlignCenter)
+        uiLayout.addWidget(self.scoreWidget, 2, 0, Qt.AlignCenter)
 
         layout.insertWidget(0, bgWidget)
         layout.insertWidget(1, uiWidget)
@@ -113,93 +107,106 @@ class MainWindow(QMainWindow):
 
         self.connectReferee()
 
+    ### Tile coloration tests
+    def updateMap(self, player) -> None:
+            match player["team"]:
+                case 1:
+                    self.arenaWidget.arenaGrid.setTileColor(player["x"], player["y"], 255, 55, 223, 122)
+                case 2:
+                    self.arenaWidget.arenaGrid.setTileColor(player["x"], player["y"], 0, 125, 153, 122)
+
+    #### -- Connexion and game loop methods -- ####
     def connectReferee(self):
         self.timer.start()
 
-        self.referee = Referee(ARBITRE, ARENA, USERNAME, PASSWORD, SERVER, PORT, DURATION)
-        # # Reset arena
-        # referee.openArena(True)
-        self.referee.resetArena()
-        self.referee.update()
-        time.sleep(3)
-        self.referee.update()
+        self.referee = MyPainter("🍉 joueur1", ARENA, USERNAME, PASSWORD, SERVER, PORT)
+        # self.referee = Referee(ARBITRE, ARENA, USERNAME, PASSWORD, SERVER, PORT, DURATION)
+        # # # Reset arena
+        # self.referee.resetArena()
+        # self.referee.update()
+        # time.sleep(3)
+        # self.referee.update()
 
-        # # Set Referee map to Arena map
-        self.referee.setRefereeMap(self.referee.getGameInfos()["map"])
-        self.referee.update()
-        time.sleep(0.3)
+        # # # Set Referee map to Arena map
+        # self.referee.setRefereeMap(self.referee.getGameInfos()["map"])
+        # self.referee.update()
+        # time.sleep(0.3)
 
-        # # Define arena rules from the json
-        self.referee.setArenaRules(serverRulesdict)
-        self.referee.update()
-        time.sleep(1)
+        # # # Define arena rules from the json
+        # self.referee.setArenaRules(serverRulesdict)
+        # self.referee.update()
+        # time.sleep(1)
 
-        # # Create players and their rules from the json
-        self.referee.createPlayers(serverRulesdict)
-        self.referee.update()
-        time.sleep(0.3)
+        # # # Create players and their rules from the json
+        # self.referee.createPlayers(serverRulesdict)
+        # self.referee.update()
+        # time.sleep(0.3)
 
-        self.referee.printInfoToArena("⌛ En attente des joueurs ...")
-        self.referee.update()
-        time.sleep(10)
-        ### TODO Wait for all players to connect 
-        readyPlayers = []
+        # self.referee.printInfoToArena("⌛ En attente des joueurs ...")
+        # self.referee.update()
+        # time.sleep(10)
+        # # # Wait for all players to connect 
+        # readyPlayers = []
 
-        while len(readyPlayers) < len(self.referee.getCurrentRange()):
-            self.referee.update()
-            time.sleep(0.3)
-            for player in self.referee.getCurrentRange().values():
-                if not player["idle"]:
-                    if player["clientId"] not in readyPlayers :
-                        readyPlayers.append(player["clientId"])
-            print(readyPlayers)
+        # while len(readyPlayers) < len(self.referee.getCurrentRange() ) - 1:
+        #     self.referee.update()
+        #     time.sleep(0.3)
+        #     for player in self.referee.getCurrentRange().values():
+        #         if not player["idle"]:
+        #             if player["clientId"] not in readyPlayers :
+        #                 readyPlayers.append(player["clientId"])
+        #     print(readyPlayers)
 
-        # # Launch party msg
-        self.referee.printInfoToArena("🟢 C'est parti !")
-        self.referee.update()
-        time.sleep(2)
+        # # # Launch party msg
+        # self.referee.printInfoToArena("🟢 C'est parti !")
+        # self.referee.update()
+        # time.sleep(2)
 
-        # # Timer and scores msg
-        self.referee.printInfoToArena(f"| ⏰ {secondsToMinutesSeconds(DURATION)} | 👑 🍉 Fuschia : {self.referee.getTeamsScores()[0]} / 🫐 Turquoise : {self.referee.getTeamsScores()[1]}.")
-        self.referee.update()
-        time.sleep(0.3)
+        # # # Timer and scores msg
+        # self.referee.printInfoToArena(f"| ⏰ {secondsToMinutesSeconds(DURATION)} | 👑 🍉 Fuschia : {self.referee.getTeamsScores()[0]} / 🫐 Turquoise : {self.referee.getTeamsScores()[1]}.")
+        # self.referee.update()
+        # time.sleep(0.3)
 
-        # # Request current timestamp
-        self.referee.startTimeMaster()
+        # # # Request current timestamp
+        # self.referee.startTimeMaster()
 
-        self.referee.setOldRange(self.referee.getCurrentRange())
+        # self.referee.setOldRange(self.referee.getCurrentRange())
 
     def onTimerUpdate(self):
-        print(self.referee.getCurrentRange())
-        # #  referee direction changes to apply updates
-        self.referee.rotate((self.referee.getDir()+1)%4)
+        self.referee.gameLoopActions()
+        print(self.referee.scanNearbyTiles())
+        # print(self.referee.getCurrentRange())
+        # # #  referee direction changes to apply updates
+        # self.referee.rotate((self.referee.getDir()+1)%4)
 
-        # # For each player
-        for player in self.referee.getCurrentRange().values():
-            # Set profile
-            self.referee.setPlayerProfileOnFire(player)
+        # # # For each player
+        # for player in self.referee.getCurrentRange().values():
+        #     # Set profile
+        #     self.referee.setPlayerProfileOnFire(player)
 
-            # If fire and ammo
-            if self.referee.getCurrentRange()[player["clientId"]]["nFire"] > self.referee.getOldRange()[player["clientId"]]["nFire"]:
-                # Update tile status
-                self.referee.updateRefereeMap(player["x"], player["y"], player["team"])
-                # Update teams score
-                self.referee.updateScores(self.referee.getRefereeMap())
-                # Decrease player ammo
-                self.referee.decreasePlayerAmmo(player)
-                # Push new map state to the server
-                self.referee.updateArenaMap()
+        #     # If fire and ammo
+        #     if self.referee.getCurrentRange()[player["clientId"]]["nFire"] > self.referee.getOldRange()[player["clientId"]]["nFire"]:
+        #         # Update tile status
+        #         self.referee.updateRefereeMap(player["x"], player["y"], player["team"])
+        #         # Update teams score
+        #         self.referee.updateScores(self.referee.getRefereeMap())
+        #         # Decrease player ammo
+        #         self.referee.decreasePlayerAmmo(player)
+        #         # Push new map state to the server
+        #         self.referee.updateArenaMap()
 
-        # # Calcul remaining time and Update arena info with new time and scores
-        self.referee.printInfoToArena(f"| ⏰ {secondsToMinutesSeconds(self.referee.getRemainingTime())} | 👑 🍉 Fuschia : {self.referee.getTeamsScores()[0]} / 🫐 Turquoise : {self.referee.getTeamsScores()[1]}.")
+        #         self.updateMap(player)
 
-        # # Sent all requests to server
-        self.referee.update()
+        # # # Calcul remaining time and Update arena info with new time and scores
+        # self.referee.printInfoToArena(f"| ⏰ {secondsToMinutesSeconds(self.referee.getRemainingTime())} | 👑 🍉 Fuschia : {self.referee.getTeamsScores()[0]} / 🫐 Turquoise : {self.referee.getTeamsScores()[1]}.")
 
-        if self.referee.isGameOver() :
-            self.referee.printInfoToArena(f"| 🔔 PARTIE TERMINEE ! | 👑 🍉 Fuschia : {self.referee.getTeamsScores()[0]} / 🫐 Turquoise : {self.referee.getTeamsScores()[1]}.")
-            self.referee.update()
-            self.timer.stop()
+        # # # Sent all requests to server
+        # self.referee.update()
+
+        # if self.referee.isGameOver() :
+        #     self.referee.printInfoToArena(f"| 🔔 PARTIE TERMINEE ! | 👑 🍉 Fuschia : {self.referee.getTeamsScores()[0]} / 🫐 Turquoise : {self.referee.getTeamsScores()[1]}.")
+        #     self.referee.update()
+        #     self.timer.stop()
 
 ######
 ######
