@@ -35,7 +35,9 @@ L'équipe gagnante est celle ayant le plus grand score, donc le plus de cases co
 
 ### Capacités de l'agent du joueur
 
--[x] Apparition dans l'arène, dans une zone d'équipe circulaire définie en amont par la carte -[x] Se déplacer sur la carte en relatif, en X et en Y, sur la direction du regard -[x] Pivoter sur lui-même dans les 4 directions : N, S, E, W
+- [x] Apparition dans l'arène, dans une zone d'équipe circulaire définie en amont par la carte
+- [x] Se déplacer sur la carte en relatif, en X et en Y, sur la direction du regard
+- [x] Pivoter sur lui-même dans les 4 directions : N, S, E, W
 
 - Identifier si une case est "neutre" (= sans peinture) / Identifier si une case est recouverte de sa couleur ou de celle de l'adversaire. ~~Identifie les cases sur une surface de 5x5 cases~~.
 - [x] Activer le spray pour colorer les cases
